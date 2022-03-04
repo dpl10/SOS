@@ -79,7 +79,6 @@ class Treell:
 		for node in self.labels:
 			self.taxa[node] = self.labels[node].split('#')[0]
 
-						
 
 	def get_parent(self, node):
 		for no, des in self.list:
@@ -110,44 +109,55 @@ class Treell:
 		return None
 
 
-	def orthology_test(self, target_node, excluded_node):
+	def orthology_test(self, target_node: int, excluded_node: int) -> list:
+		"""
+		Test orthology condition on a node of an unrooted tree. The test excludes 
+		one set of descendants of the node, to be set by `excluded_node` argument.
+		Returns an empty list if fails, or a list of the terminal taxa if passes. 
+		"""
+
 		pass_test = True
 		r = self.adj_table[target_node]
 		icr = np.where(r == 1)[0]
 		icr = icr[icr != excluded_node]
-		print(icr)
 		names = []
 		name_origin = {}
 
 		for child in icr:
+
 			if child in self.taxa:
 				names.append(self.taxa[child])
 				name_origin[self.taxa[child]] = 1
 
 			else:
 				thnames = self.orthology_test(child, target_node)
+
 				if len(thnames) == 0:
 					pass_test = False
 					name_origin = {}
 					break
+
 				else:
 					names += thnames
+
 					for tn in thnames:
 						if tn in name_origin:
 							name_origin[tn] += 1
+
 						else:
 							name_origin[tn] = 1
 
-		print(names)
-		print(name_origin)
-
 		if len(name_origin) == 1:
 			pass_test = True
+
 		elif len(name_origin) > 1:
+
 			for tn in name_origin:
+
 				if name_origin[tn] > 1:
 					pass_test = False
 					break
+
 		else:
 			pass_test = False
 
@@ -158,22 +168,6 @@ class Treell:
 		else:
 			return []
 
-		"""
-		for descendants that are leaves:
-			get names
-
-		for descendants that are not leaves:
-			call function on descendants, target_node as excluded_node
-			get their name lists
-
-		if there is at least two taxon names in descendants AND one of them is repeated in different descendant lists:
-
-			fail, return an empty list
-
-		else:
-			pass, return list of unique names
-		
-		"""
 
 	def ortholog_finder(self):
 		pass
@@ -185,17 +179,10 @@ class Treell:
 
 		"""
 
-	# Ortholog identification iin the tree conducted using the maximum inclusion,
-	# but not inclusion and multiples leaves for the same taxa only if they are
-	# monophyletic. 
-	# Evaluation different techniques may be done by measuring phylogenetic noise
-	# in the final tree 
-
-
 
 if __name__ == "__main__":
 
-	tntfile = "toy.tree"
+	tntfile = "../toy.tree"
 
 	al = Treell(tntfile)
 
@@ -203,8 +190,8 @@ if __name__ == "__main__":
 
 	for pair in al.list:
 		print(pair)
-	for la in al.labels:
-		print(la, al.labels[la])
+	#for la in al.labels:
+	#	print(la, al.labels[la])
 	for a in al.taxa:
 		print(a, al.taxa[a])
 	for le in al.lengths:
@@ -212,7 +199,7 @@ if __name__ == "__main__":
 
 	print(al.adj_table)
 
-	print(al.orthology_test(1, 3))
+	print(al.orthology_test(15, 0))
 
 
 
