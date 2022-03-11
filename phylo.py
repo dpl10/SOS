@@ -111,15 +111,13 @@ class Treell:
 
 		return None
 
-	def leaves_from_node(self, node : int) -> list:
+	def leaves_from_node(self, node : int, excluded: int) -> list:
 		th = self.adj_table[node]
 		children = np.where(th == 1)[0]
+		children = children[children != excluded]
 		leaves, no_leaves = [], []
 		for x in children:
-			if x in self.taxa:
-				leaves.append(x)
-			else:
-				no_leaves.append(x)
+			leaves.append(x) if x in self.taxa else no_leaves.append(x)
 		for child in no_leaves:
 			leaves += self.leaves_from_node(child)
 		return leaves
@@ -147,14 +145,10 @@ class Treell:
 						name_origin[self.taxa[child]] += 1
 
 				else:
-					thnames = self.orthology_test(child, target_node)
+					thtest = self.orthology_test(child, target_node)
 
-					if len(thnames) == 0:
-						pass_test = False
-						name_origin = {}
-						break
-
-					else:
+					if thtest:
+						thnames = self.leaves_from_node(child, target_node)
 						names += thnames
 
 						for tn in thnames:
@@ -163,6 +157,9 @@ class Treell:
 
 							else:
 								name_origin[tn] = 1
+					else:
+						pass_test = False
+						break
 
 			#print(f"{names=}")
 			#print(f"{name_origin=}")
