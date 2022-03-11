@@ -12,6 +12,7 @@ class Treell:
 		self.labels = {}
 		self.taxa = {}
 		self.adj_table = None
+		self.comp_record = None
 
 		with open(tnt_file , "r") as fh:
 			for line in fh:
@@ -106,8 +107,87 @@ class Treell:
 			self.adj_table[i,d] = 1
 			self.adj_table[d,i] = 1
 
+		self.results = np.zeros_like(self.adj_table)
+
 		return None
 
+	def leaves_from_node(self, node : int) -> list:
+		th = self.adj_table[node]
+		children = np.where(th == 1)[0]
+		leaves, no_leaves = [], []
+		for x in children:
+			if x in self.taxa:
+				leaves.append(x)
+			else:
+				no_leaves.append(x)
+		for child in no_leaves:
+			leaves += self.leaves_from_node(child)
+		return leaves
+
+	def orthology_test_(self, target_node: int, excluded_node: int) -> bool:
+		
+		pass_test = True
+		
+		if self.results[target_node, excluded_node] == 0:
+
+			r = self.adj_table[target_node]
+			icr = np.where(r == 1)[0]
+			icr = icr[icr != excluded_node]
+			names = []
+			name_origin = {}
+
+			for child in icr:
+
+				if child in self.taxa:
+					names.append(self.taxa[child])
+
+					if not self.taxa[child] in name_origin:
+						name_origin[self.taxa[child]] = 1
+					else:
+						name_origin[self.taxa[child]] += 1
+
+				else:
+					thnames = self.orthology_test(child, target_node)
+
+					if len(thnames) == 0:
+						pass_test = False
+						name_origin = {}
+						break
+
+					else:
+						names += thnames
+
+						for tn in thnames:
+							if tn in name_origin:
+								name_origin[tn] += 1
+
+							else:
+								name_origin[tn] = 1
+
+			#print(f"{names=}")
+			#print(f"{name_origin=}")
+
+			if len(name_origin) == 1:
+				pass_test = True
+
+			elif len(name_origin) > 1:
+
+				for tn in name_origin:
+
+					if name_origin[tn] > 1:
+						pass_test = False
+						break
+
+			else:
+				pass_test = False
+
+		elif self.results[target_node, excluded_node] == 1:
+			pass_test = False
+
+		elif self.results[target_node, excluded_node] == 2:
+			pass_test = True
+
+		return pass_test
 
 	def orthology_test(self, target_node: int, excluded_node: int) -> list:
 		"""
@@ -127,7 +207,11 @@ class Treell:
 
 			if child in self.taxa:
 				names.append(self.taxa[child])
-				name_origin[self.taxa[child]] = 1
+
+				if not self.taxa[child] in name_origin:
+					name_origin[self.taxa[child]] = 1
+				else:
+					name_origin[self.taxa[child]] += 1
 
 			else:
 				thnames = self.orthology_test(child, target_node)
@@ -146,6 +230,9 @@ class Treell:
 
 						else:
 							name_origin[tn] = 1
+
+		#print(f"{names=}")
+		#print(f"{name_origin=}")
 
 		if len(name_origin) == 1:
 			pass_test = True
@@ -170,14 +257,21 @@ class Treell:
 
 
 	def ortholog_finder(self):
-		pass
-		"""
-		for all internal edges:
-			for each node in the edge:
-				if node pass orthology property:
-					append node to ortholog list
+		internal_ = np.zeros_like(self.adj_table)
+		leaves = [x for x in range(self.adj_table.shape[0]) if x in self.taxa]
+		internal_[leaves] = 0
+		internal_[:,leaves] = 0
+		int_coors = np.where(internal_ > 0)
 
-		"""
+		print(internal_)
+
+		for i,d in zip(int_coors[0], int_coors[1]):
+			testi = self.orthology_test(i,d)
+			testd = self.orthology_test(i,d)
+
+			if len(testi):
+				#encode descendants excluding
+				pass
 
 
 if __name__ == "__main__":
@@ -199,9 +293,9 @@ if __name__ == "__main__":
 
 	print(al.adj_table)
 
-	print(al.orthology_test(15, 0))
+	print(al.orthology_test(0, 15))
 
-
+	al.ortholog_finder()
 
 
 				
