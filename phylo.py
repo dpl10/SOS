@@ -14,6 +14,12 @@ class Treell:
 		self.adj_table = None
 		self.comp_record = None
 
+		#
+		# Change numpy array types to np.int8
+		# Move unroot func to constructor
+		#
+
+
 		with open(tree_file , "r") as fh:
 			for line in fh:
 				line = line.strip()
