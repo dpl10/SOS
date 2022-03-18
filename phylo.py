@@ -4,7 +4,7 @@ from itertools import combinations
 
 class Treell:
 
-	def __init__(self, tnt_file):
+	def __init__(self, tree_file):
 
 		self.list = []
 		self.lengths = {}
@@ -14,10 +14,19 @@ class Treell:
 		self.adj_table = None
 		self.comp_record = None
 
-		with open(tnt_file , "r") as fh:
+		with open(tree_file , "r") as fh:
 			for line in fh:
 				line = line.strip()
+
 				if line.startswith("("):
+
+					if re.search(',', line): # Newick
+						line = re.sub(r'\)', ',)', line)
+						line = re.sub(r'\),\(', ')(', line)
+						line = re.sub(r',', ' ', line)
+						line = re.sub(r'\):', ')=', line)
+						line = re.sub(r':', '=', line)
+	
 					line = re.sub(r"\s+\)", ")", line)
 					node_pointer = -1
 					label = ""
