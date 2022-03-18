@@ -22,12 +22,16 @@ class Treell:
 
 					if re.search(',', line): # Newick
 						line = re.sub(r'\)', ',)', line)
-						line = re.sub(r'\),\(', ')(', line)
+						line = re.sub(r'\),\(', ') (', line)
 						line = re.sub(r',', ' ', line)
 						line = re.sub(r'\):', ')=', line)
 						line = re.sub(r':', '=', line)
+						line = re.sub(r'\s+', ' ', line)
 	
+						#print(line)
+
 					line = re.sub(r"\s+\)", ")", line)
+					print(line)
 					node_pointer = -1
 					label = ""
 					in_br_len = False
@@ -88,6 +92,8 @@ class Treell:
 		
 		for node in self.labels:
 			self.taxa[node] = self.labels[node].split('#')[0]
+
+		self.unroot()
 
 
 	def get_parent(self, node):
@@ -158,6 +164,7 @@ class Treell:
 			icr = np.where(r == 1)[0]
 			icr = icr[icr != excluded_node]
 			name_origin = {}
+			a_son_failed = False
 			
 			for child in icr:
 				a_son_failed = False
