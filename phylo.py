@@ -13,6 +13,7 @@ class Treell:
 		self.taxa = {}
 		self.adj_table = None
 		self.comp_record = None
+		self.results = None
 
 		#
 		# Change numpy array types to np.int8
@@ -37,7 +38,7 @@ class Treell:
 						#print(line)
 
 					line = re.sub(r"\s+\)", ")", line)
-					print(line)
+					#print(line)
 					node_pointer = -1
 					label = ""
 					in_br_len = False
@@ -99,21 +100,10 @@ class Treell:
 		for node in self.labels:
 			self.taxa[node] = self.labels[node].split('#')[0]
 
-		self.unroot()
-
-
-	def get_parent(self, node):
-		for no, des in self.list:
-			if des == node:
-				return no
-
-
-	def unroot(self):
 		root_edges_idx = []
 		root_descendants = []
 
 		for idx, edge in enumerate(self.list):
-		
 			if edge[0] == -1:
 				root_descendants.append(edge[1])
 				root_edges_idx.append(idx)
@@ -128,6 +118,7 @@ class Treell:
 			self.adj_table[i,d] = 1
 			self.adj_table[d,i] = 1
 
+		self.results = np.zeros_like(self.adj_table)
 		# Result table. Index meaning:
 		# First dimension = main node
 		# Second dimension = excluded node
@@ -136,9 +127,14 @@ class Treell:
 		# 0 = Not computed yet
 		# 1 = Negative
 		# 2 = Positive
-		self.results = np.zeros_like(self.adj_table)
 
-		return None
+
+	def get_parent(self, node: int) -> int:
+		""""To be used exclusively with the linked list."""
+		for no, des in self.list:
+			if des == node:
+				return no
+
 
 	def leaves_from_node(self, node : int, excluded: int) -> list:
 		th = self.adj_table[node]
@@ -259,7 +255,7 @@ class Treell:
 					inits[pa0][d] = 0
 
 		# Find orthologous clades
-		print(inits)
+		# print(inits)
 		for start in inits:
 			prev_node = None
 			curr_node = start
@@ -305,13 +301,29 @@ class Treell:
 			if (curr_node, prev_node) in encoded_edges:
 				continue
 			else:
-				encoded_edges.append((curr_node, prev_node))
-				encoding.append( [0 for x in self.labels] ) 
+				thchar = [0 for x in self.labels]
 				thleaves = self.leaves_from_node(curr_node, prev_node)
 				for l in thleaves:
-					encoding[-1][labels.index(l)] = 1
+					thchar[labels.index(l)] = 1
+				if len(set(thchar)) >= 2: # only append informative chars
+					encoding.append(thchar) 
+					encoded_edges.append((curr_node, prev_node))
 		
 		return encoding
+
+
+	def tsv_table(self):
+		#####################################################
+		# Should we add char names at the top of the table?
+		#
+		bffr = ''
+		encoding = self.ortholog_encoder()
+		for idx, node in enumerate(self.labels):
+			bffr += f'{self.labels[node]}'
+			for ichar in range(len(encoding)):
+				bffr += f'\t{encoding[ichar][idx]}'
+			bffr += '\n'
+		return bffr
 
 
 	def get_neighbors(self, node, excluded=[]):
@@ -323,30 +335,10 @@ class Treell:
 
 if __name__ == "__main__":
 
-	tntfile = "../toy.tree"
+	import sys
 
-	al = Treell(tntfile)
+	if len(sys.argv) == 2:
 
-	al.unroot()
+		al = Treell(sys.argv[1])
 
-	for pair in al.list:
-		print(pair)
-	#for la in al.labels:
-	#	print(la, al.labels[la])
-	for a in al.taxa:
-		print(a, al.taxa[a])
-	for le in al.lengths:
-		print(le, al.lengths[le])
-
-	print(al.adj_table, "\n")
-
-	#print(al.leaves_from_node(4,5))
-	#print(al.leaves_from_node(5,4))
-
-	print(al.orthology_test(17, 15))
-	print(al.orthology_test(15, 17))
-	
-	#print(al.labels.keys())
-	#print(al.ortholog_encoder())
-
-			
+		print(al.tsv_table())
