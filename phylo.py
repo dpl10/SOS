@@ -335,10 +335,14 @@ class Treell:
 
 if __name__ == "__main__":
 
-	import sys
+	import os
 
-	if len(sys.argv) == 2:
-
-		al = Treell(sys.argv[1])
-
-		print(al.tsv_table())
+	for d, s, f in os.walk('test_trees/'):
+		for filito in f:
+			if filito.endswith('.newick'):
+				file = os.path.join(d, filito)
+				root = file.rstrip('.newick')
+				thnet = Treell(file)
+				res = thnet.tsv_table()
+				with open(f'{root}.tsv', 'w') as wh:
+					wh.write(res)
