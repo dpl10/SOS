@@ -1,29 +1,29 @@
-Ambtri#ATR_00029G00070	0	1	1
-Aratha#AT5G23340	0	1	1
-Selmoe#410553	1	1	1
-Ambtri#ATR_00056G00360	1	1	1
-Ginbil#evm.model.chr1.719	1	1	1
-Pintae#PITA_45560	1	1	1
-Seqgig#SEGI_20328	1	1	1
-Seqgig#SEGI_23038	1	1	1
-Seqgig#SEGI_37199	1	1	1
-Wolnob#Wono263760.1	1	1	1
-Ginbil#evm.model.chr4.1117	1	0	1
-Pintae#PITA_38593	1	0	1
-Seqgig#SEGI_38686	1	0	1
-Wolnob#Wono080180.2	1	0	1
-Phypat#Pp3c23_2930V3	1	1	1
-Selmoe#90468	1	1	1
-Aratha#AT3G58530	1	1	1
-Ambtri#ATR_00133G00400	1	1	1
-Ginbil#evm.model.chr5.2019	1	1	1
-Ginbil#evm.model.chr5.2020	1	1	1
-Pintae#PITA_48638	1	1	1
-Seqgig#SEGI_09769	1	1	1
-Wolnob#Wono403140.3	1	1	1
-Pintae#PITA_49813	1	1	1
-Pintae#PITA_01065	1	1	1
-Pintae#PITA_25095	1	1	0
-Ginbil#evm.model.chr6.1098	1	1	0
-Seqgig#SEGI_01489	1	1	0
-Wolnob#Wono398270.1	1	1	0
+Ambtri#ATR_00029G00070	0	1	1	1	1
+Aratha#AT5G23340	0	1	1	1	1
+Selmoe#410553	1	1	1	1	1
+Ambtri#ATR_00056G00360	1	1	1	1	1
+Ginbil#evm.model.chr1.719	1	0	1	1	1
+Pintae#PITA_45560	1	0	1	1	1
+Seqgig#SEGI_20328	1	0	1	1	1
+Seqgig#SEGI_23038	1	0	1	1	1
+Seqgig#SEGI_37199	1	0	1	1	1
+Wolnob#Wono263760.1	1	0	1	1	1
+Ginbil#evm.model.chr4.1117	1	1	0	1	1
+Pintae#PITA_38593	1	1	0	1	1
+Seqgig#SEGI_38686	1	1	0	1	1
+Wolnob#Wono080180.2	1	1	0	1	1
+Phypat#Pp3c23_2930V3	1	1	1	0	1
+Selmoe#90468	1	1	1	0	1
+Aratha#AT3G58530	1	1	1	0	1
+Ambtri#ATR_00133G00400	1	1	1	0	1
+Ginbil#evm.model.chr5.2019	1	1	1	0	1
+Ginbil#evm.model.chr5.2020	1	1	1	0	1
+Pintae#PITA_48638	1	1	1	0	1
+Seqgig#SEGI_09769	1	1	1	0	1
+Wolnob#Wono403140.3	1	1	1	0	1
+Pintae#PITA_49813	1	1	1	1	1
+Pintae#PITA_01065	1	1	1	1	1
+Pintae#PITA_25095	1	1	1	1	0
+Ginbil#evm.model.chr6.1098	1	1	1	1	0
+Seqgig#SEGI_01489	1	1	1	1	0
+Wolnob#Wono398270.1	1	1	1	1	0

@@ -1,6 +1,7 @@
 import re
 import numpy as np
 from itertools import combinations
+from functools import reduce
 
 class Treell:
 
@@ -151,6 +152,25 @@ class Treell:
 		return leaves
 
 
+	def names_struc_from_node(self, node : int, excluded: int) -> list:
+		th = self.adj_table[node]
+		children = np.where(th == 1)[0]
+		children = children[children != excluded]
+		leaves, no_leaves = [], []
+		struc = [] 
+		
+		for x in children:
+			leaves.append(x) if x in self.taxa else no_leaves.append(x)
+
+		if len(leaves) > 0:
+			struc.append(leaves)
+
+		for child in no_leaves:
+			struc.append(self.leaves_from_node(child, node))
+		
+		return struc
+
+
 	def orthology_test(self, target_node: int, excluded_node: int) -> bool:
 		"""
 		Test orthology condition on a node of an unrooted tree. The test excludes 
@@ -159,58 +179,41 @@ class Treell:
 		"""
 		
 		pass_test = True
-		
+		#print(f"{target_node=}, {excluded_node=}")
 		if self.results[target_node, excluded_node] == 0:
 			
 			r = self.adj_table[target_node]
 			icr = np.where(r == 1)[0]
 			icr = icr[icr != excluded_node]
-			name_origin = {}
-			a_son_failed = False
+			internal = [x for x in icr if not x in self.labels]
+			#print(f"{internal=}")
+
+			if len(internal) > 0:
+				test_map = map(lambda x: self.orthology_test(x, target_node), internal)
+				falsies = [x for x in test_map if x == False]
+				#print(f"{falsies=}")
+				if len(falsies) > 0: pass_test = False
 			
-			for child in icr:
-				a_son_failed = False
-				if child in self.taxa:
-					if not self.taxa[child] in name_origin:
-						name_origin[self.taxa[child]] = 1
-					else:
-						name_origin[self.taxa[child]] += 1
+			if pass_test:
 
-				else:
-					thtest = self.orthology_test(child, target_node)
+				thleaves = self.names_struc_from_node(target_node, excluded_node)
+				#print(f"{thleaves=}")
+				name_struc = []
 
-					if thtest:
-						thleaves = self.leaves_from_node(child, target_node)
-						thnames = [self.taxa[x] for x in thleaves]
-						
-						for tn in thnames:
-							if tn in name_origin:
-								name_origin[tn] += 1
-							else:
-								name_origin[tn] = 1
+				for brleaves in thleaves:
+					name_struc.append(set([self.taxa[x] for x in brleaves]))
 
-					else:
-						a_son_failed = True
-						break
-
-			#print(f"{name_origin=}\n")
-
-			if a_son_failed:
-				pass_test = False
-
-			else:
-				if len(name_origin) == 1:
+				superset = reduce(lambda x,y: x | y, name_struc)
+				#print(f"{superset=}")
+				if len(superset) == 1:
 					pass_test = True
 
-				elif len(name_origin) > 1:
-					for tn in name_origin:
-						if name_origin[tn] > 1:
+				else:
+					for i,d in combinations(name_struc, 2):
+						if len(i & d) > 0:
 							pass_test = False
 							break
-
-				else: # redundant?
-					pass_test = False
-
+			#print(f"{pass_test=}")
 			if pass_test:
 				self.results[target_node, excluded_node] = 2
 			else:
@@ -226,7 +229,7 @@ class Treell:
 		return pass_test
 
 
-	def ortholog_encoder(self):
+	def ortholog_encoder(self, min_taxa = 3):
 		encoded_edges = []
 		encoding = []
 		labels = [x for x in self.labels]
@@ -303,21 +306,22 @@ class Treell:
 			else:
 				thchar = [0 for x in self.labels]
 				thleaves = self.leaves_from_node(curr_node, prev_node)
-				for l in thleaves:
-					thchar[labels.index(l)] = 1
-				if len(set(thchar)) >= 2: # only append informative chars
-					encoding.append(thchar) 
-					encoded_edges.append((curr_node, prev_node))
+				thtaxa = {self.labels[x] for x in thleaves}
+
+				if len(thtaxa) >= min_taxa:
+					for l in thleaves:
+						thchar[labels.index(l)] = 1
+					if len(set(thchar)) >= 2: # only append informative chars
+						encoding.append(thchar) 
+						encoded_edges.append((curr_node, prev_node))
 		
 		return encoding
 
 
-	def tsv_table(self):
-		#####################################################
-		# Should we add char names at the top of the table?
-		#
+	def tsv_table(self, min_spp):
+		#===>> Should we add char names at the top of the table? <<===
 		bffr = ''
-		encoding = self.ortholog_encoder()
+		encoding = self.ortholog_encoder(min_taxa=min_spp)
 		for idx, node in enumerate(self.labels):
 			bffr += f'{self.labels[node]}'
 			for ichar in range(len(encoding)):
@@ -334,15 +338,29 @@ class Treell:
 
 
 if __name__ == "__main__":
-
+	#==> Is rooting inteferring with ortholog identification? <==
 	import os
 
-	for d, s, f in os.walk('test_trees/'):
-		for filito in f:
-			if filito.endswith('.newick'):
-				file = os.path.join(d, filito)
-				root = file.rstrip('.newick')
-				thnet = Treell(file)
-				res = thnet.tsv_table()
-				with open(f'{root}.tsv', 'w') as wh:
-					wh.write(res)
+	tsv = True
+
+	if tsv:
+		for d, s, f in os.walk('test_trees/'):
+			for filito in f:
+				if filito.endswith('.newick'):
+					file = os.path.join(d, filito)
+					root = file.rstrip('.newick')
+					thnet = Treell(file)
+					res = thnet.tsv_table(3)
+					with open(f'{root}.tsv', 'w') as wh:
+						wh.write(res)
+
+	else:
+		tfile = "test_trees/group1_Veronica/1431.tre"
+		tr = Treell(tfile)
+		print(tr.list)
+		print("\n".join([f"{x[0]}:{x[1]}" for x in tr.labels.items()]))
+		#print(tr.orthology_test(29, 5))
+		#print(tr.orthology_test(2, 4))
+		#print(tr.orthology_test(7, 6))
+		#print(tr.orthology_test(6, 7))
+		print(tr.tsv_table())
