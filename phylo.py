@@ -3,7 +3,7 @@ from functools import reduce
 from itertools import combinations
 
 import numpy as np
-from scipy.sparse import csr_matrix
+from scipy.sparse import csr_matrix, find
 
 class Treell:
 
@@ -15,7 +15,7 @@ class Treell:
 		self.labels = {}
 		self.taxa = {}
 		self.adj_table = None
-		self.adj_table_ = None
+		#self.adj_table_ = None
 		self.results = None
 
 		#
@@ -115,7 +115,7 @@ class Treell:
 			self.list.append([i, d])
 
 		self.list = [x for i,x in enumerate(self.list) if not i in root_edges_idx]
-		self.adj_table_ = np.zeros((self.node_count, self.node_count))
+		#self.adj_table_ = np.zeros((self.node_count, self.node_count))
 
 		rows = [x[0] for x in self.list] + [x[1] for x in self.list]
 		cols = [x[1] for x in self.list] + [x[0] for x in self.list]
@@ -123,12 +123,15 @@ class Treell:
 		self.adj_table = csr_matrix((vals, (rows, cols)), 
 			shape=(self.node_count, self.node_count), dtype=np.int8)
 
-		for i,d in self.list:
-			self.adj_table_[i,d] = 1
-			self.adj_table_[d,i] = 1
+		self.adj_table = self.adj_table.tolil()
+
+		#for i,d in self.list:
+		#	self.adj_table_[i,d] = 1
+		#	self.adj_table_[d,i] = 1
 
 
-		self.results = np.zeros_like(self.adj_table_)
+		#self.results = np.zeros_like(self.adj_table_)
+		self.results = np.zeros(self.adj_table.shape)
 		# Result table. Index meaning:
 		# First dimension = main node
 		# Second dimension = excluded node
@@ -147,7 +150,9 @@ class Treell:
 
 
 	def leaves_from_node(self, node : int, excluded: int) -> list:
-		th = self.adj_table_[node]
+		#th = self.adj_table_[node]
+		#print(node)
+		th = self.adj_table[node].toarray().flatten()
 		children = np.where(th == 1)[0]
 		children = children[children != excluded]
 		leaves, no_leaves = [], []
@@ -162,7 +167,8 @@ class Treell:
 
 
 	def names_struc_from_node(self, node : int, excluded: int) -> list:
-		th = self.adj_table_[node]
+		#th = self.adj_table_[node]
+		th = self.adj_table[node].toarray().flatten()
 		children = np.where(th == 1)[0]
 		children = children[children != excluded]
 		leaves, no_leaves = [], []
@@ -191,7 +197,8 @@ class Treell:
 		#print(f"{target_node=}, {excluded_node=}")
 		if self.results[target_node, excluded_node] == 0:
 			
-			r = self.adj_table_[target_node]
+			#r = self.adj_table_[target_node]
+			r = self.adj_table[target_node].toarray().flatten()
 			icr = np.where(r == 1)[0]
 			icr = icr[icr != excluded_node]
 			internal = [x for x in icr if not x in self.labels]
@@ -242,20 +249,26 @@ class Treell:
 		encoded_edges = []
 		encoding = []
 		labels = [x for x in self.labels]
-		internal = np.copy(self.adj_table_)
+		#internal = np.copy(self.adj_table_)
+		internal = self.adj_table.copy()
+
 		leaves = [x for x in self.taxa]
 		internal[leaves] = 0
 		internal[:,leaves] = 0
-		int_coors = np.where(internal > 0)
-		for i,d in zip(int_coors[0], int_coors[1]):
+		#int_coors = np.where(internal > 0)
+		int_coors = find(internal > 0)
+		
+		for i,d in zip(int_coors[1], int_coors[0]):
 			_ = self.orthology_test(i,d)
 			_ = self.orthology_test(d,i)
 		
 		# Get starting nodes for traversal
 		inits = {}
 		for i,d in combinations(leaves, 2):
-			pa0 = self.adj_table_[i]
-			pa1 = self.adj_table_[d]
+			#pa0 = self.adj_table_[i]
+			#pa1 = self.adj_table_[d]
+			pa0 = self.adj_table[i].toarray().flatten()
+			pa1 = self.adj_table[d].toarray().flatten()
 			pa0 = np.where(pa0 == 1)[0][0]
 			pa1 = np.where(pa1 == 1)[0][0]
 
@@ -267,14 +280,17 @@ class Treell:
 					inits[pa0][d] = 0
 
 		# Find orthologous clades
-		# print(inits)
+		#print(f"{inits=}")
 		for start in inits:
+			#print(f"{start=}")
 			prev_node = None
 			curr_node = start
-			curr_excluded = list(inits[start].keys())
+			#curr_excluded = list(inits[start].keys())
+			curr_excluded = labels
 			still = True
 			
 			while still:
+				#print(f"{curr_node=}, {prev_node=}")
 				neighs = self.get_neighbors(curr_node, curr_excluded)
 				curr_excluded = [curr_node] + labels
 				cands = []
@@ -289,6 +305,7 @@ class Treell:
 			
 				if len(cands) == 0:
 					still = False
+					#===>>  Not working for orthologs of sub-terminal clades
 			
 				elif len(cands) == 1:
 					prev_node = curr_node
@@ -310,11 +327,13 @@ class Treell:
 					curr_node = choosen
 
 			# encode char
-			if (curr_node, prev_node) in encoded_edges:
+			if prev_node is None or (prev_node, curr_node) in encoded_edges:
 				continue
 			else:
 				thchar = [0 for x in self.labels]
-				thleaves = self.leaves_from_node(curr_node, prev_node)
+				#thleaves = self.leaves_from_node(curr_node, prev_node)
+				#print(prev_node, curr_node)
+				thleaves = self.leaves_from_node(prev_node, curr_node)
 				thtaxa = {self.labels[x] for x in thleaves}
 
 				if len(thtaxa) >= min_taxa:
@@ -322,7 +341,7 @@ class Treell:
 						thchar[labels.index(l)] = 1
 					if len(set(thchar)) >= 2: # only append informative chars
 						encoding.append(thchar) 
-						encoded_edges.append((curr_node, prev_node))
+						encoded_edges.append((prev_node, curr_node))
 		
 		return encoding
 
@@ -340,7 +359,8 @@ class Treell:
 
 
 	def get_neighbors(self, node, excluded=[]):
-		th = self.adj_table_[node]
+		#th = self.adj_table_[node]
+		th = self.adj_table[node].toarray().flatten()
 		th = np.where(th > 0)[0]
 		th = th[~np.isin(th, excluded)]
 		return th
@@ -350,12 +370,13 @@ if __name__ == "__main__":
 	#==> Is rooting inteferring with ortholog identification? <==
 	import os
 
-	tsv = False
+	tsv = True
 
 	if tsv:
 		for d, s, f in os.walk('test_trees/'):
 			for filito in f:
 				if filito.endswith('.newick'):
+					print(filito)
 					file = os.path.join(d, filito)
 					root = file.rstrip('.newick')
 					thnet = Treell(file)
@@ -364,7 +385,7 @@ if __name__ == "__main__":
 						wh.write(res)
 
 	else:
-		tfile = "test_trees/group1_Veronica/1431.tre"
+		tfile = "test_trees/group1_Veronica/1341.newick"
 		tr = Treell(tfile)
 		print(tr.list)
 		print("\n".join([f"{x[0]}:{x[1]}" for x in tr.labels.items()]))
@@ -372,4 +393,4 @@ if __name__ == "__main__":
 		#print(tr.orthology_test(2, 4))
 		#print(tr.orthology_test(7, 6))
 		#print(tr.orthology_test(6, 7))
-		print(tr.tsv_table(3))
+		print(tr.tsv_table(2))
