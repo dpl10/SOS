@@ -1,15 +1,16 @@
-Ambtri#ATR_00048G00470	0	1	1
-Aratha#AT5G46910	0	1	1
-Selmoe#81310	0	1	1
-Ginbil#evm.model.chr1.1168	1	0	1
-Wolnob#Wono370700.3	1	0	1
-Ginbil#evm.model.chr1.1169	1	1	1
-Ginbil#evm.model.chr2.646	1	1	0
-Pintae#PITA_20468	1	1	0
-Seqgig#SEGI_19775	1	1	0
-Seqgig#SEGI_30100	1	1	0
-Wolnob#Wono113480.1	1	1	0
-Wolnob#Wono355000.1	1	1	0
-Ginbil#evm.model.chr2.1368	0	1	1
-Pintae#PITA_27993	0	1	1
-Pintae#PITA_42618	0	1	1
+sequence	state_1	state_2
+Ambtri#ATR_00048G00470	1	0
+Aratha#AT5G46910	1	0
+Selmoe#81310	1	0
+Ginbil#evm.model.chr1.1168	0	0
+Wolnob#Wono370700.3	0	0
+Ginbil#evm.model.chr1.1169	0	0
+Ginbil#evm.model.chr2.646	0	1
+Pintae#PITA_20468	0	1
+Seqgig#SEGI_19775	0	1
+Seqgig#SEGI_30100	0	1
+Wolnob#Wono113480.1	0	1
+Wolnob#Wono355000.1	0	1
+Ginbil#evm.model.chr2.1368	1	0
+Pintae#PITA_27993	1	0
+Pintae#PITA_42618	1	0

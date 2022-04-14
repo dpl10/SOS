@@ -1,17 +1,18 @@
-Ambtri#ATR_00019G01760	0	1
-Aratha#AT5G10680	0	1
-Aratha#AT5G10720	0	1
-Ginbil#evm.model.chr2.199	0	1
-Ginbil#evm.model.chr2.928	0	1
-Pintae#PITA_49291	0	1
-Ginbil#evm.model.chr2.198	1	1
-Seqgig#SEGI_17810	1	1
-Seqgig#SEGI_09005	1	0
-Wolnob#Wono053130.1	1	0
-Phypat#Pp3c1_29920V3	0	1
-Phypat#Pp3c2_6520V3	0	1
-Phypat#Pp3c1_9540V3	0	1
-Phypat#Pp3c2_36790V3	0	1
-Selmoe#423877	0	1
-Selmoe#20385	0	1
-Selmoe#424825	0	1
+sequence	state_1
+Ambtri#ATR_00019G01760	1
+Aratha#AT5G10680	1
+Aratha#AT5G10720	1
+Ginbil#evm.model.chr2.199	1
+Ginbil#evm.model.chr2.928	1
+Pintae#PITA_49291	1
+Ginbil#evm.model.chr2.198	0
+Seqgig#SEGI_17810	0
+Seqgig#SEGI_09005	0
+Wolnob#Wono053130.1	0
+Phypat#Pp3c1_29920V3	1
+Phypat#Pp3c2_6520V3	1
+Phypat#Pp3c1_9540V3	1
+Phypat#Pp3c2_36790V3	1
+Selmoe#423877	1
+Selmoe#20385	1
+Selmoe#424825	1

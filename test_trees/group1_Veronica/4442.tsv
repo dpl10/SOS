@@ -1,12 +1,13 @@
-Ambtri#ATR_00001G00750	0	1
-Aratha#AT1G20225	0	1
-Aratha#AT1G76020	0	1
-Phypat#Pp3c23_11410V3	0	1
-Selmoe#270941	0	1
-Wolnob#Wono171520.1	0	1
-Pintae#PITA_24415	0	1
-Pintae#PITA_04667	0	1
-Pintae#PITA_11635	0	1
-Wolnob#Wono204340.1	1	1
-Seqgig#SEGI_34166	1	0
-Wolnob#Wono204350.1	1	0
+sequence	state_1
+Ambtri#ATR_00001G00750	1
+Aratha#AT1G20225	1
+Aratha#AT1G76020	1
+Phypat#Pp3c23_11410V3	1
+Selmoe#270941	1
+Wolnob#Wono171520.1	1
+Pintae#PITA_24415	1
+Pintae#PITA_04667	1
+Pintae#PITA_11635	1
+Wolnob#Wono204340.1	0
+Seqgig#SEGI_34166	0
+Wolnob#Wono204350.1	0

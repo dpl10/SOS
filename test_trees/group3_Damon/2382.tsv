@@ -1,19 +1,20 @@
-Ambtri#ATR_00010G03030	0	1	1	1
-Aratha#AT5G09995	0	1	1	1
-Ginbil#evm.model.chr12.833	1	1	1	1
-Ginbil#evm.model.chr12.834	1	0	1	1
-Ambtri#ATR_00013G02070	1	0	1	1
-Aratha#AT1G08530	1	0	1	1
-Seqgig#SEGI_02150	1	1	0	1
-Wolnob#Wono226910.4	1	1	0	1
-Selmoe#49619	1	1	1	0
-Ginbil#evm.model.chr3.1372	1	1	1	0
-Ambtri#ATR_00045G01280	1	1	1	0
-Seqgig#SEGI_22717	1	1	1	0
-Wolnob#Wono430570.2	1	1	1	0
-Phypat#Pp3c19_6090V3	0	1	1	1
-Phypat#Pp3c18_21490V3	0	1	1	1
-Phypat#Pp3c21_1120V3	0	1	1	1
-Ginbil#evm.model.chr5.776	0	1	1	1
-Pintae#PITA_06612	0	1	1	1
-Wolnob#Wono486220.6	0	1	1	1
+sequence	state_1	state_2	state_3
+Ambtri#ATR_00010G03030	1	0	0
+Aratha#AT5G09995	1	0	0
+Ginbil#evm.model.chr12.833	0	0	0
+Ginbil#evm.model.chr12.834	0	1	0
+Ambtri#ATR_00013G02070	0	1	0
+Aratha#AT1G08530	0	1	0
+Seqgig#SEGI_02150	0	0	0
+Wolnob#Wono226910.4	0	0	0
+Selmoe#49619	0	0	1
+Ginbil#evm.model.chr3.1372	0	0	1
+Ambtri#ATR_00045G01280	0	0	1
+Seqgig#SEGI_22717	0	0	1
+Wolnob#Wono430570.2	0	0	1
+Phypat#Pp3c19_6090V3	1	0	0
+Phypat#Pp3c18_21490V3	1	0	0
+Phypat#Pp3c21_1120V3	1	0	0
+Ginbil#evm.model.chr5.776	1	0	0
+Pintae#PITA_06612	1	0	0
+Wolnob#Wono486220.6	1	0	0

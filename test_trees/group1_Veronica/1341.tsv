@@ -1,28 +1,29 @@
-Ambtri#ATR_00044G01630      	0 	1 	1 	1 	1 	1 	1 	1
-Aratha#AT4G35550            	0 	1 	1 	1 	1 	1 	1 	1
-Aratha#AT1G20700            	1 	0 	1 	1 	1 	1 	1 	1
-Aratha#AT1G20710            	1 	0 	1 	1 	1 	1 	1 	1
-Pintae#PITA_19892           	1 	1 	1 	1 	1 	1 	1 	1
-Seqgig#SEGI_10596           	1 	1 	1 	1 	1 	1 	1 	1
-Phypat#Pp3c26_8569V3        	1 	1 	1 	1 	1 	1 	1 	1
-Selmoe#4561                 	1 	1 	1 	1 	1 	1 	1 	1
-Aratha#AT5G46010            	1 	1 	0 	1 	1 	1 	1 	1
-Selmoe#84611                	1 	1 	0 	1 	1 	1 	1 	1
-Ginbil#evm.model.chr2.36    	1 	1 	1 	0 	1 	1 	1 	1
-Pintae#PITA_12859           	1 	1 	1 	0 	1 	1 	1 	1
-Seqgig#SEGI_00926           	1 	1 	1 	0 	1 	1 	1 	1
-Wolnob#Wono057310.1         	1 	1 	1 	0 	1 	1 	1 	1
-Wolnob#Wono263510.1         	1 	1 	1 	0 	1 	1 	1 	1
-Ginbil#evm.model.chr4.136   	1 	1 	1 	1 	0 	1 	1 	1
-Pintae#PITA_22948           	1 	1 	1 	1 	0 	1 	1 	1
-Wolnob#Wono460710.3         	1 	1 	1 	1 	0 	1 	1 	1
-Seqgig#SEGI_28995           	1 	1 	1 	1 	0 	1 	1 	1
-Seqgig#SEGI_33782           	1 	1 	1 	1 	0 	1 	1 	1
-Phypat#Pp3c15_20000V3       	1 	1 	1 	1 	1 	0 	1 	1
-Phypat#Pp3c9_13640V3        	1 	1 	1 	1 	1 	0 	1 	1
-Ginbil#evm.model.chr10.1124 	1 	1 	1 	1 	1 	1 	0 	1
-Pintae#PITA_48125           	1 	1 	1 	1 	1 	1 	0 	1
-Seqgig#SEGI_22190           	1 	1 	1 	1 	1 	1 	0 	1
-Wolnob#Wono023990.1         	1 	1 	1 	1 	1 	1 	0 	1
-Selmoe#39729                	1 	1 	1 	1 	1 	1 	1 	0
-Selmoe#39737                	1 	1 	1 	1 	1 	1 	1 	0
+sequence	state_1	state_2	state_3
+Ambtri#ATR_00044G01630	0	0	0
+Aratha#AT4G35550	0	0	0
+Aratha#AT1G20700	0	0	0
+Aratha#AT1G20710	0	0	0
+Pintae#PITA_19892	0	0	0
+Seqgig#SEGI_10596	0	0	0
+Phypat#Pp3c26_8569V3	0	0	0
+Selmoe#4561	0	0	0
+Aratha#AT5G46010	0	0	0
+Selmoe#84611	0	0	0
+Ginbil#evm.model.chr2.36	1	0	0
+Pintae#PITA_12859	1	0	0
+Seqgig#SEGI_00926	1	0	0
+Wolnob#Wono057310.1	1	0	0
+Wolnob#Wono263510.1	1	0	0
+Ginbil#evm.model.chr4.136	0	1	0
+Pintae#PITA_22948	0	1	0
+Wolnob#Wono460710.3	0	1	0
+Seqgig#SEGI_28995	0	1	0
+Seqgig#SEGI_33782	0	1	0
+Phypat#Pp3c15_20000V3	0	0	0
+Phypat#Pp3c9_13640V3	0	0	0
+Ginbil#evm.model.chr10.1124	0	0	1
+Pintae#PITA_48125	0	0	1
+Seqgig#SEGI_22190	0	0	1
+Wolnob#Wono023990.1	0	0	1
+Selmoe#39729	0	0	0
+Selmoe#39737	0	0	0

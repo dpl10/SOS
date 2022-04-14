@@ -15,14 +15,11 @@ class Treell:
 		self.labels = {}
 		self.taxa = {}
 		self.adj_table = None
-		#self.adj_table_ = None
 		self.results = None
 
+		#########################################
+		# Update results table to sparse matrix
 		#
-		# Change numpy array types to np.int8
-		# Move unroot func to constructor
-		#
-
 
 		with open(tree_file , "r") as fh:
 			for line in fh:
@@ -37,11 +34,8 @@ class Treell:
 						line = re.sub(r'\):', ')=', line)
 						line = re.sub(r':', '=', line)
 						line = re.sub(r'\s+', ' ', line)
-	
-						#print(line)
 
 					line = re.sub(r"\s+\)", ")", line)
-					#print(line)
 					node_pointer = -1
 					label = ""
 					in_br_len = False
@@ -68,14 +62,12 @@ class Treell:
 								node_pointer = self.node_count
 								self.node_count += 1
 								self.list.append([pa, node_pointer])
-								#print(f"(: {papa_pointer} to {node_pointer}")
 								
 							elif char == ')':
 								if len(label) > 0:
 									self.labels[node_pointer] = label
 									label = ""
 								node_pointer = self.get_parent(node_pointer)
-								#print(f"): back to {node_pointer}")
 								
 							elif char == " ":
 								if len(label) > 0:
@@ -86,7 +78,6 @@ class Treell:
 								node_pointer = self.node_count
 								self.node_count += 1
 								self.list.append([pa, node_pointer])
-								#print(f"Space: {pa} to {node_pointer}")
 
 							elif char == "=":
 								if len(label) > 0:
@@ -115,23 +106,17 @@ class Treell:
 			self.list.append([i, d])
 
 		self.list = [x for i,x in enumerate(self.list) if not i in root_edges_idx]
-		#self.adj_table_ = np.zeros((self.node_count, self.node_count))
-
 		rows = [x[0] for x in self.list] + [x[1] for x in self.list]
 		cols = [x[1] for x in self.list] + [x[0] for x in self.list]
 		vals = [1 for x in rows]
+		vzeros = [0 for x in rows]
 		self.adj_table = csr_matrix((vals, (rows, cols)), 
 			shape=(self.node_count, self.node_count), dtype=np.int8)
-
+		self.results_ = csr_matrix((vzeros, (rows, cols)), 
+			shape=(self.node_count, self.node_count), dtype=np.int8)
 		self.adj_table = self.adj_table.tolil()
+		self.results = np.zeros(self.adj_table.shape, dtype=np.int8)
 
-		#for i,d in self.list:
-		#	self.adj_table_[i,d] = 1
-		#	self.adj_table_[d,i] = 1
-
-
-		#self.results = np.zeros_like(self.adj_table_)
-		self.results = np.zeros(self.adj_table.shape)
 		# Result table. Index meaning:
 		# First dimension = main node
 		# Second dimension = excluded node
@@ -150,8 +135,6 @@ class Treell:
 
 
 	def leaves_from_node(self, node : int, excluded: int) -> list:
-		#th = self.adj_table_[node]
-		#print(node)
 		th = self.adj_table[node].toarray().flatten()
 		children = np.where(th == 1)[0]
 		children = children[children != excluded]
@@ -167,7 +150,6 @@ class Treell:
 
 
 	def names_struc_from_node(self, node : int, excluded: int) -> list:
-		#th = self.adj_table_[node]
 		th = self.adj_table[node].toarray().flatten()
 		children = np.where(th == 1)[0]
 		children = children[children != excluded]
@@ -249,13 +231,11 @@ class Treell:
 		encoded_edges = []
 		encoding = []
 		labels = [x for x in self.labels]
-		#internal = np.copy(self.adj_table_)
 		internal = self.adj_table.copy()
 
 		leaves = [x for x in self.taxa]
 		internal[leaves] = 0
 		internal[:,leaves] = 0
-		#int_coors = np.where(internal > 0)
 		int_coors = find(internal > 0)
 		
 		for i,d in zip(int_coors[1], int_coors[0]):
@@ -265,8 +245,6 @@ class Treell:
 		# Get starting nodes for traversal
 		inits = {}
 		for i,d in combinations(leaves, 2):
-			#pa0 = self.adj_table_[i]
-			#pa1 = self.adj_table_[d]
 			pa0 = self.adj_table[i].toarray().flatten()
 			pa1 = self.adj_table[d].toarray().flatten()
 			pa0 = np.where(pa0 == 1)[0][0]
@@ -305,7 +283,6 @@ class Treell:
 			
 				if len(cands) == 0:
 					still = False
-					#===>>  Not working for orthologs of sub-terminal clades
 			
 				elif len(cands) == 1:
 					prev_node = curr_node
@@ -331,11 +308,10 @@ class Treell:
 				continue
 			else:
 				thchar = [0 for x in self.labels]
-				#thleaves = self.leaves_from_node(curr_node, prev_node)
 				#print(prev_node, curr_node)
 				thleaves = self.leaves_from_node(prev_node, curr_node)
-				thtaxa = {self.labels[x] for x in thleaves}
-
+				thtaxa = {self.taxa[x] for x in thleaves}
+				#print(f"{thtaxa=}")
 				if len(thtaxa) >= min_taxa:
 					for l in thleaves:
 						thchar[labels.index(l)] = 1
@@ -347,19 +323,25 @@ class Treell:
 
 
 	def tsv_table(self, min_spp):
-		#===>> Should we add char names at the top of the table? <<===
 		bffr = ''
 		encoding = self.ortholog_encoder(min_taxa=min_spp)
+		charnames = [f"state_{i+1}" for i,x in enumerate(encoding)]
+		header = 'sequence\t' + '\t'.join(charnames) + '\n'
+	
 		for idx, node in enumerate(self.labels):
 			bffr += f'{self.labels[node]}'
+			
 			for ichar in range(len(encoding)):
 				bffr += f'\t{encoding[ichar][idx]}'
+			
 			bffr += '\n'
+		
+		bffr = header + bffr
+		
 		return bffr
 
 
 	def get_neighbors(self, node, excluded=[]):
-		#th = self.adj_table_[node]
 		th = self.adj_table[node].toarray().flatten()
 		th = np.where(th > 0)[0]
 		th = th[~np.isin(th, excluded)]
@@ -367,7 +349,6 @@ class Treell:
 
 
 if __name__ == "__main__":
-	#==> Is rooting inteferring with ortholog identification? <==
 	import os
 
 	tsv = True
@@ -385,10 +366,10 @@ if __name__ == "__main__":
 						wh.write(res)
 
 	else:
-		tfile = "test_trees/group1_Veronica/1341.newick"
+		tfile = "test_trees/group1_Veronica/1431.newick"
 		tr = Treell(tfile)
-		print(tr.list)
-		print("\n".join([f"{x[0]}:{x[1]}" for x in tr.labels.items()]))
+		#print(tr.list)
+		#print("\n".join([f"{x[0]}:{x[1]}" for x in tr.labels.items()]))
 		#print(tr.orthology_test(29, 5))
 		#print(tr.orthology_test(2, 4))
 		#print(tr.orthology_test(7, 6))
