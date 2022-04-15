@@ -1,10 +1,13 @@
 import re
-import numpy as np
+from functools import reduce
 from itertools import combinations
+
+import numpy as np
+from scipy.sparse import csr_matrix, find
 
 class Treell:
 
-	def __init__(self, tnt_file):
+	def __init__(self, tree_file):
 
 		self.list = []
 		self.lengths = {}
@@ -12,12 +15,26 @@ class Treell:
 		self.labels = {}
 		self.taxa = {}
 		self.adj_table = None
-		self.comp_record = None
+		self.results = None
 
-		with open(tnt_file , "r") as fh:
+		#########################################
+		# Update results table to sparse matrix
+		#
+
+		with open(tree_file , "r") as fh:
 			for line in fh:
 				line = line.strip()
+
 				if line.startswith("("):
+
+					if re.search(',', line): # Newick
+						line = re.sub(r'\)', ',)', line)
+						line = re.sub(r'\),\(', ') (', line)
+						line = re.sub(r',', ' ', line)
+						line = re.sub(r'\):', ')=', line)
+						line = re.sub(r':', '=', line)
+						line = re.sub(r'\s+', ' ', line)
+
 					line = re.sub(r"\s+\)", ")", line)
 					node_pointer = -1
 					label = ""
@@ -45,14 +62,12 @@ class Treell:
 								node_pointer = self.node_count
 								self.node_count += 1
 								self.list.append([pa, node_pointer])
-								#print(f"(: {papa_pointer} to {node_pointer}")
 								
 							elif char == ')':
 								if len(label) > 0:
 									self.labels[node_pointer] = label
 									label = ""
 								node_pointer = self.get_parent(node_pointer)
-								#print(f"): back to {node_pointer}")
 								
 							elif char == " ":
 								if len(label) > 0:
@@ -63,7 +78,6 @@ class Treell:
 								node_pointer = self.node_count
 								self.node_count += 1
 								self.list.append([pa, node_pointer])
-								#print(f"Space: {pa} to {node_pointer}")
 
 							elif char == "=":
 								if len(label) > 0:
@@ -80,19 +94,10 @@ class Treell:
 		for node in self.labels:
 			self.taxa[node] = self.labels[node].split('#')[0]
 
-
-	def get_parent(self, node):
-		for no, des in self.list:
-			if des == node:
-				return no
-
-
-	def unroot(self):
 		root_edges_idx = []
 		root_descendants = []
 
 		for idx, edge in enumerate(self.list):
-		
 			if edge[0] == -1:
 				root_descendants.append(edge[1])
 				root_edges_idx.append(idx)
@@ -101,11 +106,16 @@ class Treell:
 			self.list.append([i, d])
 
 		self.list = [x for i,x in enumerate(self.list) if not i in root_edges_idx]
-		self.adj_table = np.zeros((self.node_count, self.node_count))
-
-		for i,d in self.list:
-			self.adj_table[i,d] = 1
-			self.adj_table[d,i] = 1
+		rows = [x[0] for x in self.list] + [x[1] for x in self.list]
+		cols = [x[1] for x in self.list] + [x[0] for x in self.list]
+		vals = [1 for x in rows]
+		vzeros = [0 for x in rows]
+		self.adj_table = csr_matrix((vals, (rows, cols)), 
+			shape=(self.node_count, self.node_count), dtype=np.int8)
+		self.results_ = csr_matrix((vzeros, (rows, cols)), 
+			shape=(self.node_count, self.node_count), dtype=np.int8)
+		self.adj_table = self.adj_table.tolil()
+		self.results = np.zeros(self.adj_table.shape, dtype=np.int8)
 
 		# Result table. Index meaning:
 		# First dimension = main node
@@ -115,12 +125,17 @@ class Treell:
 		# 0 = Not computed yet
 		# 1 = Negative
 		# 2 = Positive
-		self.results = np.zeros_like(self.adj_table)
 
-		return None
+
+	def get_parent(self, node: int) -> int:
+		""""To be used exclusively with the linked list."""
+		for no, des in self.list:
+			if des == node:
+				return no
+
 
 	def leaves_from_node(self, node : int, excluded: int) -> list:
-		th = self.adj_table[node]
+		th = self.adj_table[node].toarray().flatten()
 		children = np.where(th == 1)[0]
 		children = children[children != excluded]
 		leaves, no_leaves = [], []
@@ -134,6 +149,25 @@ class Treell:
 		return leaves
 
 
+	def names_struc_from_node(self, node : int, excluded: int) -> list:
+		th = self.adj_table[node].toarray().flatten()
+		children = np.where(th == 1)[0]
+		children = children[children != excluded]
+		leaves, no_leaves = [], []
+		struc = [] 
+		
+		for x in children:
+			leaves.append(x) if x in self.taxa else no_leaves.append(x)
+
+		if len(leaves) > 0:
+			struc.append(leaves)
+
+		for child in no_leaves:
+			struc.append(self.leaves_from_node(child, node))
+		
+		return struc
+
+
 	def orthology_test(self, target_node: int, excluded_node: int) -> bool:
 		"""
 		Test orthology condition on a node of an unrooted tree. The test excludes 
@@ -142,57 +176,42 @@ class Treell:
 		"""
 		
 		pass_test = True
-		
+		#print(f"{target_node=}, {excluded_node=}")
 		if self.results[target_node, excluded_node] == 0:
 			
-			r = self.adj_table[target_node]
+			#r = self.adj_table_[target_node]
+			r = self.adj_table[target_node].toarray().flatten()
 			icr = np.where(r == 1)[0]
 			icr = icr[icr != excluded_node]
-			name_origin = {}
+			internal = [x for x in icr if not x in self.labels]
+			#print(f"{internal=}")
+
+			if len(internal) > 0:
+				test_map = map(lambda x: self.orthology_test(x, target_node), internal)
+				falsies = [x for x in test_map if x == False]
+				#print(f"{falsies=}")
+				if len(falsies) > 0: pass_test = False
 			
-			for child in icr:
-				a_son_failed = False
-				if child in self.taxa:
-					if not self.taxa[child] in name_origin:
-						name_origin[self.taxa[child]] = 1
-					else:
-						name_origin[self.taxa[child]] += 1
+			if pass_test:
 
-				else:
-					thtest = self.orthology_test(child, target_node)
+				thleaves = self.names_struc_from_node(target_node, excluded_node)
+				#print(f"{thleaves=}")
+				name_struc = []
 
-					if thtest:
-						thleaves = self.leaves_from_node(child, target_node)
-						thnames = [self.taxa[x] for x in thleaves]
-						
-						for tn in thnames:
-							if tn in name_origin:
-								name_origin[tn] += 1
-							else:
-								name_origin[tn] = 1
+				for brleaves in thleaves:
+					name_struc.append(set([self.taxa[x] for x in brleaves]))
 
-					else:
-						a_son_failed = True
-						break
-
-			#print(f"{name_origin=}\n")
-
-			if a_son_failed:
-				pass_test = False
-
-			else:
-				if len(name_origin) == 1:
+				superset = reduce(lambda x,y: x | y, name_struc)
+				#print(f"{superset=}")
+				if len(superset) == 1:
 					pass_test = True
 
-				elif len(name_origin) > 1:
-					for tn in name_origin:
-						if name_origin[tn] > 1:
+				else:
+					for i,d in combinations(name_struc, 2):
+						if len(i & d) > 0:
 							pass_test = False
 							break
-
-				else: # redundant?
-					pass_test = False
-
+			#print(f"{pass_test=}")
 			if pass_test:
 				self.results[target_node, excluded_node] = 2
 			else:
@@ -208,24 +227,26 @@ class Treell:
 		return pass_test
 
 
-	def ortholog_encoder(self):
+	def ortholog_encoder(self, min_taxa = 3):
 		encoded_edges = []
 		encoding = []
 		labels = [x for x in self.labels]
-		internal = np.copy(self.adj_table)
+		internal = self.adj_table.copy()
+
 		leaves = [x for x in self.taxa]
 		internal[leaves] = 0
 		internal[:,leaves] = 0
-		int_coors = np.where(internal > 0)
-		for i,d in zip(int_coors[0], int_coors[1]):
+		int_coors = find(internal > 0)
+		
+		for i,d in zip(int_coors[1], int_coors[0]):
 			_ = self.orthology_test(i,d)
 			_ = self.orthology_test(d,i)
 		
 		# Get starting nodes for traversal
 		inits = {}
 		for i,d in combinations(leaves, 2):
-			pa0 = self.adj_table[i]
-			pa1 = self.adj_table[d]
+			pa0 = self.adj_table[i].toarray().flatten()
+			pa1 = self.adj_table[d].toarray().flatten()
 			pa0 = np.where(pa0 == 1)[0][0]
 			pa1 = np.where(pa1 == 1)[0][0]
 
@@ -237,14 +258,17 @@ class Treell:
 					inits[pa0][d] = 0
 
 		# Find orthologous clades
-		print(inits)
+		#print(f"{inits=}")
 		for start in inits:
+			#print(f"{start=}")
 			prev_node = None
 			curr_node = start
-			curr_excluded = list(inits[start].keys())
+			#curr_excluded = list(inits[start].keys())
+			curr_excluded = labels
 			still = True
 			
 			while still:
+				#print(f"{curr_node=}, {prev_node=}")
 				neighs = self.get_neighbors(curr_node, curr_excluded)
 				curr_excluded = [curr_node] + labels
 				cands = []
@@ -280,51 +304,74 @@ class Treell:
 					curr_node = choosen
 
 			# encode char
-			if (curr_node, prev_node) in encoded_edges:
+			if prev_node is None or (prev_node, curr_node) in encoded_edges:
 				continue
 			else:
-				encoded_edges.append((curr_node, prev_node))
-				encoding.append( [0 for x in self.labels] ) 
-				thleaves = self.leaves_from_node(curr_node, prev_node)
-				for l in thleaves:
-					encoding[-1][labels.index(l)] = 1
+				thchar = [0 for x in self.labels]
+				#print(prev_node, curr_node)
+				thleaves = self.leaves_from_node(prev_node, curr_node)
+				thtaxa = {self.taxa[x] for x in thleaves}
+				#print(f"{thtaxa=}")
+				if len(thtaxa) >= min_taxa:
+					for l in thleaves:
+						thchar[labels.index(l)] = 1
+					if len(set(thchar)) >= 2: # only append informative chars
+						encoding.append(thchar) 
+						encoded_edges.append((prev_node, curr_node))
 		
 		return encoding
 
 
+	def tsv_table(self, min_spp):
+		bffr = ''
+		encoding = self.ortholog_encoder(min_taxa=min_spp)
+		charnames = [f"state_{i+1}" for i,x in enumerate(encoding)]
+		header = 'sequence\t' + '\t'.join(charnames) + '\n'
+	
+		for idx, node in enumerate(self.labels):
+			bffr += f'{self.labels[node]}'
+			
+			for ichar in range(len(encoding)):
+				bffr += f'\t{encoding[ichar][idx]}'
+			
+			bffr += '\n'
+		
+		bffr = header + bffr
+		
+		return bffr
+
+
 	def get_neighbors(self, node, excluded=[]):
-		th = self.adj_table[node]
+		th = self.adj_table[node].toarray().flatten()
 		th = np.where(th > 0)[0]
 		th = th[~np.isin(th, excluded)]
 		return th
 
 
 if __name__ == "__main__":
+	import os
 
-	tntfile = "../toy.tree"
+	tsv = True
 
-	al = Treell(tntfile)
+	if tsv:
+		for d, s, f in os.walk('test_trees/'):
+			for filito in f:
+				if filito.endswith('.newick'):
+					print(filito)
+					file = os.path.join(d, filito)
+					root = file.rstrip('.newick')
+					thnet = Treell(file)
+					res = thnet.tsv_table(3)
+					with open(f'{root}.tsv', 'w') as wh:
+						wh.write(res)
 
-	al.unroot()
-
-	for pair in al.list:
-		print(pair)
-	#for la in al.labels:
-	#	print(la, al.labels[la])
-	for a in al.taxa:
-		print(a, al.taxa[a])
-	for le in al.lengths:
-		print(le, al.lengths[le])
-
-	print(al.adj_table, "\n")
-
-	#print(al.leaves_from_node(4,5))
-	#print(al.leaves_from_node(5,4))
-
-	print(al.orthology_test(17, 15))
-	print(al.orthology_test(15, 17))
-	
-	#print(al.labels.keys())
-	#print(al.ortholog_encoder())
-
-			
+	else:
+		tfile = "test_trees/group1_Veronica/1431.newick"
+		tr = Treell(tfile)
+		#print(tr.list)
+		#print("\n".join([f"{x[0]}:{x[1]}" for x in tr.labels.items()]))
+		#print(tr.orthology_test(29, 5))
+		#print(tr.orthology_test(2, 4))
+		#print(tr.orthology_test(7, 6))
+		#print(tr.orthology_test(6, 7))
+		print(tr.tsv_table(2))
