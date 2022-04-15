@@ -19,7 +19,7 @@ class Treell:
 
 		#########################################
 		# Update results table to sparse matrix
-		#
+		# Test on tree files with superflous parentheses
 
 		with open(tree_file , "r") as fh:
 			for line in fh:
