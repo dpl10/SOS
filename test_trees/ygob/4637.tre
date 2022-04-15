@@ -1,0 +1,7 @@
+#NEXUS
+
+begin trees ; 
+tree tnt_1 = [&U] 
+(Ecym#Ecym_6315 ,(Ncas#NCAS0H02190 ,(Ncas#NCAS0B04250 ,(Ncas#NCAS0B04270 ,Ncas#NCAS0H02200 ))));
+
+end ; 

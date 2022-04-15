@@ -1,0 +1,7 @@
+#NEXUS
+
+begin trees ; 
+tree tnt_1 = [&U] 
+(Tpha#TPHA0B04920 ,(Tpha#TPHA0C05030 ,((Tpha#TPHA0B04930 ,(Tpha#TPHA0D04720 ,Tpha#TPHA0F03700 )),(Tpha#TPHA0G03800 ,Tpha#TPHA0N00100 ))));
+
+end ; 

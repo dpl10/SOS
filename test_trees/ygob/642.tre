@@ -1,0 +1,7 @@
+#NEXUS
+
+begin trees ; 
+tree tnt_1 = [&U] 
+(Cgla#CAGL0B02189g ,(((((Tbla#TBLA0B07490 ,(Kafr#KAFR0E02060 ,(Tpha#TPHA0H01010 ,(Vpol#Kpol_1010.55 ,(Ncas#NCAS0D01590 ,(Cgla#CAGL0I01782g ,Ndai#NDAI0C03160 )))))),(Tdel#TDEL0G01360 ,Zrou#ZYRO0B15466g )),((Lklu#SAKL0G15180g ,(Klac#KLLA0E16061g ,(Ecym#Ecym_2068 ,Egos#ADL128C )),(Lthe#KLTH0C02024g ,Lwal#Kwal_27.9870 )),(Tpha#TPHA0A04970 ,Vpol#Kpol_1050.49 ))),(Suva#Suva_7.513 ,(Skud#Skud_7.555 ,(Scer#YGR218W ,Smik#Smik_16.86 )))),((Kafr#KAFR0B04170 ,Knag#KNAG0A01660 ),(Ncas#NCAS0A07450 ,Ndai#NDAI0D02420 ))));
+
+end ; 

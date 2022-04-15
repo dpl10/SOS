@@ -1,0 +1,7 @@
+#NEXUS
+
+begin trees ; 
+tree tnt_1 = [&U] 
+(Kafr#KAFR0K00130 ,((Lwal#Kwal_23.4811 ,Vpol#Kpol_1039.14 ),(Ndai#NDAI0I01540 ,Ndai#NDAI0I01680 )));
+
+end ; 

@@ -1,0 +1,7 @@
+#NEXUS
+
+begin trees ; 
+tree tnt_1 = [&U] 
+(Lwal#Kwal_11.656 ,Lwal#Kwal_38.16365 ,(Lwal#Kwal_23.2773 ,Lwal#Kwal_31.12909 ,(Lwal#Kwal_16.2659 ,Lwal#Kwal_34.15677 ,Lwal#Kwal_39.16435 ,Lwal#Kwal_55.22260 ,Lwal#Kwal_60.24930 ),(Lwal#Kwal_23.3699 ,Lwal#Kwal_55.22248 )));
+
+end ; 

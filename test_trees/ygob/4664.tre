@@ -1,0 +1,7 @@
+#NEXUS
+
+begin trees ; 
+tree tnt_1 = [&U] 
+(Scer#YLR154CH ,(Scer#YLR156CA ,Scer#YLR157CC ,Scer#YLR159CA ,Smik#Smik_15.304 ));
+
+end ; 

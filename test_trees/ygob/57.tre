@@ -1,0 +1,7 @@
+#NEXUS
+
+begin trees ; 
+tree tnt_1 = [&U] 
+(Kafr#KAFR0K02290 ,(Kafr#KAFR0K02295 ,Ncas#NCAS0A05800 ,Ncas#NCAS0E00690 ,Skud#Skud_12.299 ,Skud#Skud_82.1 ,Smik#Smik_13.225 ,Smik#Smik_13.226 ,Smik#Smik_5.284 ,Suva#Suva_10.195 ,Suva#Suva_10.196 ,Suva#Suva_10.197 ,Tbla#TBLA0E02365 ,(((Lthe#KLTH0B04686g ,Skud#Skud_57.2 ,Skud#Skud_57.3 ,Smik#Smik_108.1 ,Smik#Smik_12.313 ,Smik#Smik_12.314 ,Smik#Smik_12.315 ,Smik#Smik_124.1 ,(Knag#KNAG0M01670 ,Vpol#Kpol_489.23 ,(Tbla#TBLA0A00230 ,Tbla#TBLA0A06870 ,Tbla#TBLA0B08350 ,Tbla#TBLA0C00570 ,Tbla#TBLA0F01880 ))),(Lwal#Kwal_33.14867 ,Suva#Suva_10.194 )),((Lwal#Kwal_27.12442 ,(Lwal#Kwal_34.16311 ,Lwal#Kwal_39.16413 ,(Lwal#Kwal_2.430 ,Lwal#Kwal_33.15087 ,Lwal#Kwal_50.19415 ,(Lwal#Kwal_12.672 ,Lwal#Kwal_20.2719 ,Lwal#Kwal_47.17294 ,((Lwal#Kwal_1.414 ,Lwal#Kwal_13.685 ,Lwal#Kwal_13.687 ,Lwal#Kwal_13.689 ,Lwal#Kwal_14.769 ,Lwal#Kwal_14.773 ,Lwal#Kwal_2.432 ,Lwal#Kwal_23.3719 ,Lwal#Kwal_27.11215 ,Lwal#Kwal_27.11216 ,Lwal#Kwal_33.15086 ,Lwal#Kwal_34.16313 ,Lwal#Kwal_39.16415 ,Lwal#Kwal_47.17030 ,Lwal#Kwal_47.19348 ,Lwal#Kwal_54.19476 ,Lwal#Kwal_55.19796 ,Lwal#Kwal_9.621 ,Lwal#Kwal_9.622 ),(Lwal#Kwal_12.670 ,Lwal#Kwal_47.17664 )))))),(Lwal#Kwal_14.771 ,Lwal#Kwal_23.3717 ))),(Ndai#NDAI0A01430 ,Ndai#NDAI0B00750 ,Tdel#TDEL0H00110 ,Tdel#TDEL0H00120 ,Tpha#TPHA0G00155 ,Tpha#TPHA0I03315 ,Vpol#Kpol_1066.33 ,Vpol#Kpol_1066.34 )));
+
+end ; 

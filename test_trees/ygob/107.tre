@@ -1,0 +1,7 @@
+#NEXUS
+
+begin trees ; 
+tree tnt_1 = [&U] 
+(Scer#YDR340W ,(Smik#Smik_4.351 ,(Smik#Smik_11.35 ,Smik#Smik_12.509 ,Smik#Smik_13.259 ,Smik#Smik_13.462 ,Smik#Smik_13.497 ,Smik#Smik_15.109 ,Smik#Smik_15.359 ,Smik#Smik_16.121 ,Smik#Smik_16.314 ,Smik#Smik_16.391 ,Smik#Smik_16.430 ,Smik#Smik_2.164 ,Smik#Smik_3.130 ,Smik#Smik_4.486 ,Smik#Smik_5.42 ,Smik#Smik_5.86 ,Smik#Smik_6.245 ,Smik#Smik_6.267 ,Smik#Smik_6.379 ,Smik#Smik_6.381 ,Smik#Smik_6.465 ,Smik#Smik_7.243 ,Smik#Smik_7.39 ,Smik#Smik_9.105 ,(Smik#Smik_11.288 ,(Smik#Smik_11.121 ,(Scer#YMR158CA ,Smik#Smik_6.106 ))),(Smik#Smik_4.211 ,(Smik#Smik_10.201 ,Smik#Smik_12.350 )),(Smik#Smik_10.205 ,(Smik#Smik_13.173 ,Smik#Smik_13.191 )),(Smik#Smik_10.391 ,Smik#Smik_3.112 ),(Smik#Smik_5.292 ,(Smik#Smik_10.70 ,Smik#Smik_13.73 )),((Smik#Smik_11.69 ,Smik#Smik_8.39 ),(Smik#Smik_13.110 ,(Smik#Smik_13.220 ,Smik#Smik_13.308 ))),(Smik#Smik_7.62 ,(Smik#Smik_12.420 ,Smik#Smik_12.521 )),(Smik#Smik_16.116 ,Smik#Smik_6.310 ),(Smik#Smik_7.185 ,Smik#Smik_9.74 ))));
+
+end ; 

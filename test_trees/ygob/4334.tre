@@ -1,0 +1,7 @@
+#NEXUS
+
+begin trees ; 
+tree tnt_1 = [&U] 
+(Zrou#ZYRO0A00154g ,((Zrou#ZYRO0F05434g ,(Zrou#ZYRO0A00264g ,Zrou#ZYRO0A11374g )),(Zrou#ZYRO0A13904g ,(Zrou#ZYRO0B00132g ,(Zrou#ZYRO0E00308g ,(Zrou#ZYRO0C00220g ,(Zrou#ZYRO0A13838g ,Zrou#ZYRO0G00154g )))))));
+
+end ; 

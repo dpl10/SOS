@@ -1,0 +1,7 @@
+#NEXUS
+
+begin trees ; 
+tree tnt_1 = [&U] 
+(Vpol#Kpol_177.1 ,(Vpol#Kpol_240.1 ,Vpol#Kpol_304.1 ,Vpol#Kpol_389.1 ));
+
+end ; 

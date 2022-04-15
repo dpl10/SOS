@@ -1,0 +1,7 @@
+#NEXUS
+
+begin trees ; 
+tree tnt_1 = [&U] 
+(Ncas#NCAS0J01440 ,((Ndai#NDAI0A06350 ,Ndai#NDAI0H01250 ),(Ndai#NDAI0D00460 ,(Ndai#NDAI0I01500 ,Ndai#NDAI0I01720 ))));
+
+end ; 
