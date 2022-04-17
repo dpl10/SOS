@@ -3,14 +3,18 @@ SOS: Sequestering Orthologous Subclades
 
 # Algorithm description
 
-1. Trees are read from a tree file (TNT or Newick formats).
+**Input:** A phylogenetic tree stored in TNT or Newick formats. Polytomies are treated as such. 
 
-2. Then they are unrooted.
+**Output:** A tsv table in which rows are tree terminal labels and columns are encoded orthologous clades.
 
-3. All internal nodes are tested for the ortholog condition. Therefore, for a each node:
+1. The tree is unrooted and stored in memory as an adjacency matrix.
 
-	a. All descendant taxa conform to a set of mutually exclusive clades.
+2. Internal nodes are tested for the ortholog condition. This condition assumes that a valid ortholog node:
 
-	b. Node has two or more descendant taxa.
+	a. Has two or more descendant taxa.
 
-4. The most inclusive orthologous sets are tagged.
+	b. All descendant taxa conform to a set of mutually exclusive clades.
+
+3. The unrooted tree is traversed postorder, but traversal is stopped to retrieve the most inclusive orthologous clades.
+
+4. An output matrix is initialized, and a column is encoded for each orthologous clade from step 3.
