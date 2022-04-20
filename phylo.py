@@ -5,10 +5,11 @@ from itertools import combinations
 import numpy as np
 from scipy.sparse import csr_matrix, find
 
-class Treell:
-
-	def __init__(self, tree_file):
-
+class Tree:
+	"""Simple class to manipulate unrooted phylogenetic trees."""
+	def __init__(self, tree_file: str):
+		"""Instantiates Tree class from a Newick tree file. Trees could have 
+		polytomies, branch lengths are discarded."""
 		self.list = []
 		self.lengths = {}
 		self.node_count = 0
@@ -18,7 +19,6 @@ class Treell:
 		self.results = None
 
 		#########################################
-		# Update results table to sparse matrix
 		# Test on tree files with superflous parentheses
 
 		with open(tree_file , "r") as fh:
@@ -109,32 +109,40 @@ class Treell:
 		rows = [x[0] for x in self.list] + [x[1] for x in self.list]
 		cols = [x[1] for x in self.list] + [x[0] for x in self.list]
 		vals = [1 for x in rows]
+		
+		
+		"""
+		Result table. Index meaning:
+		First dimension = main node
+		Second dimension = excluded node
+		
+		Values
+		0 = Not computed yet
+		1 = Negative
+		2 = Positive
+		"""
 		vzeros = [0 for x in rows]
 		self.adj_table = csr_matrix((vals, (rows, cols)), 
 			shape=(self.node_count, self.node_count), dtype=np.int8)
-		self.results_ = csr_matrix((vzeros, (rows, cols)), 
+		self.results = csr_matrix((vzeros, (rows, cols)), 
 			shape=(self.node_count, self.node_count), dtype=np.int8)
 		self.adj_table = self.adj_table.tolil()
-		self.results = np.zeros(self.adj_table.shape, dtype=np.int8)
-
-		# Result table. Index meaning:
-		# First dimension = main node
-		# Second dimension = excluded node
-		#
-		# Values
-		# 0 = Not computed yet
-		# 1 = Negative
-		# 2 = Positive
-
+		
 
 	def get_parent(self, node: int) -> int:
-		""""To be used exclusively with the linked list."""
+		""""To be used exclusively with the preliminary linked list during class
+		instantiation."""
 		for no, des in self.list:
 			if des == node:
 				return no
 
 
 	def leaves_from_node(self, node : int, excluded: int) -> list:
+		"""
+		Returns the list of leaves (ints) that are descendant of a given node. 
+		It is required to select a neighbor (`excluded`) of the latter node to 
+		orientate (root) the operation.
+		"""
 		th = self.adj_table[node].toarray().flatten()
 		children = np.where(th == 1)[0]
 		children = children[children != excluded]
@@ -150,10 +158,17 @@ class Treell:
 
 
 	def names_struc_from_node(self, node : int, excluded: int) -> list:
+		"""
+		Returns a two-dimensional list of descentdant leaves from a node. The 
+		first dimension of the output indicates their ancestorship relative to 
+		the inmediate descendants of the input node. It is required to select a 
+		neighbor (`excluded`) of the latter node to orientate (root) the operation.
+		"""
 		th = self.adj_table[node].toarray().flatten()
 		children = np.where(th == 1)[0]
 		children = children[children != excluded]
-		leaves, no_leaves = [], []
+		leaves = []
+		no_leaves = []
 		struc = [] 
 		
 		for x in children:
@@ -172,7 +187,8 @@ class Treell:
 		"""
 		Test orthology condition on a node of an unrooted tree. The test excludes 
 		one set of descendants of the node, to be set by `excluded_node` argument.
-		Returns boolean. Updates table at `self.result`. 
+		Returns boolean. Results are stored in a sparse matrix (`self.result`) for 
+		backreference. 
 		"""
 		
 		pass_test = True
@@ -227,7 +243,12 @@ class Treell:
 		return pass_test
 
 
-	def ortholog_encoder(self, min_taxa = 3):
+	def ortholog_encoder(self, min_taxa : int = 3) -> list:
+		"""
+		Encodes orthologous groups found in the input tree into a matrix of shape
+		leaves x orthologous group. Matrix is a two-dimensional list. Orthologous 
+		sets are automatically encoded as ones.
+		"""
 		encoded_edges = []
 		encoding = []
 		labels = [x for x in self.labels]
@@ -341,7 +362,8 @@ class Treell:
 		return bffr
 
 
-	def get_neighbors(self, node, excluded=[]):
+	def get_neighbors(self, node: int, excluded: list = []):
+		"""Retrieve list of adjacent nodes."""
 		th = self.adj_table[node].toarray().flatten()
 		th = np.where(th > 0)[0]
 		th = th[~np.isin(th, excluded)]
@@ -351,7 +373,7 @@ class Treell:
 if __name__ == "__main__":
 	import os
 
-	tsv = True
+	tsv = False
 
 	if tsv:
 		for d, s, f in os.walk('test_trees/'):
@@ -360,14 +382,14 @@ if __name__ == "__main__":
 					print(filito)
 					file = os.path.join(d, filito)
 					root = file.rstrip('.newick')
-					thnet = Treell(file)
+					thnet = Tree(file)
 					res = thnet.tsv_table(3)
 					with open(f'{root}.tsv', 'w') as wh:
 						wh.write(res)
 
 	else:
 		tfile = "test_trees/group1_Veronica/1431.newick"
-		tr = Treell(tfile)
+		tr = Tree(tfile)
 		#print(tr.list)
 		#print("\n".join([f"{x[0]}:{x[1]}" for x in tr.labels.items()]))
 		#print(tr.orthology_test(29, 5))
