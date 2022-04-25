@@ -1,10 +1,20 @@
 import sys
 import os
 
+"""
+Use:
+
+	python nexus2newick.py <directory>
+
+where:
+
+`directory`: folder containing files in nexus format, extension `.tre`.
+"""
+
+
 indir = None
-for arg in sys.argv:
-	if os.path.exists(arg):
-		indir = arg
+if os.path.exists(sys.argv[1]):
+	indir = sys.argv[1]
 
 for d, s, f in os.walk(indir):
 	for file in f:

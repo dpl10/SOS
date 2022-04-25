@@ -25,6 +25,9 @@ class Tree:
 			for line in fh:
 				line = line.strip()
 
+				if re.search(r"#nexus", line, re.IGNORECASE):
+					raise ValueError("Input file should conform to either TNT or Newick format.")
+
 				if line.startswith("("):
 
 					if re.search(',', line): # Newick
