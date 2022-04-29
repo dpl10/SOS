@@ -3,7 +3,7 @@ SOS: Sequestering Orthologous Subclades
 
 # Algorithm description
 
-**Input:** A phylogenetic tree stored in TNT or Newick formats. Polytomies are treated as such. 
+**Input:** A phylogenetic tree stored in Newick or TNT formats. Polytomies are treated as such. 
 
 **Output:** A tsv table in which rows are tree terminal labels and columns are encoded orthologous clades.
 
