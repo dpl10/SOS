@@ -199,7 +199,7 @@ class Tree:
 		if self.results[target_node, excluded_node] == 0:
 			
 			#r = self.adj_table_[target_node]
-			r = self.adj_table[target_node].toarray().flatten()
+			r = self.adj_table[target_node].toarray().flatten() # <<===
 			icr = np.where(r == 1)[0]
 			icr = icr[icr != excluded_node]
 			internal = [x for x in icr if not x in self.labels]
@@ -207,12 +207,13 @@ class Tree:
 
 			if len(internal) > 0:
 				test_map = map(lambda x: self.orthology_test(x, target_node), internal)
-				falsies = [x for x in test_map if x == False]
+				falsies = [x for x in test_map if x == False] # <<===
 				#print(f"{falsies=}")
 				if len(falsies) > 0: pass_test = False
 			
 			if pass_test:
 
+				# Init name_struct to the final shape  <<===
 				thleaves = self.names_struc_from_node(target_node, excluded_node)
 				#print(f"{thleaves=}")
 				name_struc = []
@@ -269,7 +270,7 @@ class Tree:
 		# Get starting nodes for traversal
 		inits = {}
 		for i,d in combinations(leaves, 2):
-			pa0 = self.adj_table[i].toarray().flatten()
+			pa0 = self.adj_table[i].toarray().flatten() # <<====
 			pa1 = self.adj_table[d].toarray().flatten()
 			pa0 = np.where(pa0 == 1)[0][0]
 			pa1 = np.where(pa1 == 1)[0][0]
@@ -391,7 +392,7 @@ if __name__ == "__main__":
 						wh.write(res)
 
 	else:
-		tfile = "test_trees/group1_Veronica/1431.newick"
+		tfile = "test_trees/ygob/19.newick"
 		tr = Tree(tfile)
 		#print(tr.list)
 		#print("\n".join([f"{x[0]}:{x[1]}" for x in tr.labels.items()]))
