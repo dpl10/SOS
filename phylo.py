@@ -1,9 +1,10 @@
 import re
 from functools import reduce
 from itertools import combinations
-
+import sys
 import numpy as np
 from scipy.sparse import csr_matrix, find
+from time import time
 
 class Tree:
 	"""Simple class to manipulate unrooted phylogenetic trees."""
@@ -129,7 +130,13 @@ class Tree:
 			shape=(self.node_count, self.node_count), dtype=np.int8)
 		self.results = csr_matrix((vzeros, (rows, cols)), 
 			shape=(self.node_count, self.node_count), dtype=np.int8)
-		self.adj_table = self.adj_table.tolil()
+		#self.adj_table = self.adj_table.tolil()
+		
+		self.edge_coors_x, self.edge_coors_y = np.where(self.adj_table.toarray() > 0)
+		ba = np.isin(self.edge_coors_x, list(self.taxa.keys()))
+		bb = np.isin(self.edge_coors_y, list(self.taxa.keys()))
+		self.edge_coors_x = self.edge_coors_x[~(ba | bb)]
+		self.edge_coors_y = self.edge_coors_y[~(ba | bb)]
 		
 
 	def get_parent(self, node: int) -> int:
@@ -207,8 +214,11 @@ class Tree:
 
 			if len(internal) > 0:
 				test_map = map(lambda x: self.orthology_test(x, target_node), internal)
-				falsies = [x for x in test_map if x == False] # <<===
-				#print(f"{falsies=}")
+				
+				falsies = []
+				for x in test_map:
+					if x == False: falsies.append(x)
+
 				if len(falsies) > 0: pass_test = False
 			
 			if pass_test:
@@ -220,6 +230,9 @@ class Tree:
 
 				for brleaves in thleaves:
 					name_struc.append(set([self.taxa[x] for x in brleaves]))
+
+
+				#print(name_struc)
 
 				superset = reduce(lambda x,y: x | y, name_struc)
 				#print(f"{superset=}")
@@ -256,14 +269,15 @@ class Tree:
 		encoded_edges = []
 		encoding = []
 		labels = [x for x in self.labels]
-		internal = self.adj_table.copy()
-
-		leaves = [x for x in self.taxa]
-		internal[leaves] = 0
-		internal[:,leaves] = 0
-		int_coors = find(internal > 0)
 		
-		for i,d in zip(int_coors[1], int_coors[0]):
+		#internal = self.adj_table.tolil().copy()
+		leaves = [x for x in self.taxa]
+		#internal[leaves] = 0
+		#internal[:,leaves] = 0
+		#int_coors = find(internal > 0)
+		
+		#for i,d in zip(int_coors[1], int_coors[0]):
+		for i,d in zip(self.edge_coors_x, self.edge_coors_y):
 			_ = self.orthology_test(i,d)
 			_ = self.orthology_test(d,i)
 		
