@@ -191,6 +191,10 @@ class Tree:
 			struc.append(self.leaves_from_node(child, node))
 		
 		return struc
+		# ===>>  Reorder nodes
+		# ===>>  Create dict or Bloom filter (?) to store times a sp is inserted in the tree  
+		#  [[24, 25], [27, 29, 30, 31]]
+		# [[24], [25], [27, 29, 30, 31]]
 
 
 	def orthology_test(self, target_node: int, excluded_node: int) -> bool:
