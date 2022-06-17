@@ -98,6 +98,24 @@ class Tree:
 		for node in self.labels:
 			self.taxa[node] = self.labels[node].split('#')[0]
 
+		# Minimum species parameter: allow 0 as posible value, then output everything
+		# Howver, print warning when not informative output (no data or perfect tree)
+		# Perfect trees: print a single column of ones
+
+		if len(self.taxa) < 4: # min leaves?
+			#output no result
+			pass
+		else:
+			uniq_tax = set(self.taxa)
+
+			if len(uniq_tax) < 4:
+				pass
+
+			else:
+				if len(uniq_tax) == len(self.taxa):					
+					pass
+
+
 		root_edges_idx = []
 		root_descendants = []
 
