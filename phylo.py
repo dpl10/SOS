@@ -98,24 +98,6 @@ class Tree:
 		for node in self.labels:
 			self.taxa[node] = self.labels[node].split('#')[0]
 
-		# Minimum species parameter: allow 0 as posible value, then output everything
-		# Howver, print warning when not informative output (no data or perfect tree)
-		# Perfect trees: print a single column of ones
-
-		if len(self.taxa) < 4: # min leaves?
-			#output no result
-			pass
-		else:
-			uniq_tax = set(self.taxa)
-
-			if len(uniq_tax) < 4:
-				pass
-
-			else:
-				if len(uniq_tax) == len(self.taxa):					
-					pass
-
-
 		root_edges_idx = []
 		root_descendants = []
 
@@ -383,7 +365,26 @@ class Tree:
 		return encoding
 
 
-	def tsv_table(self, min_spp):
+	def tsv_table(self, min_spp, output_any = False):
+
+		# Minimum species parameter: allow 0 as posible value, then output everything
+		# However, print warning when not informative output (no data or perfect tree)
+		# Perfect trees: print a single column of ones
+
+		uniq_tax = set(self.taxa)
+	
+		if len(self.taxa) < 4: # min leaves?
+			#output no result
+			pass
+		else:
+			if len(uniq_tax) < 4: # min taxa
+				pass
+
+			else:
+				if len(uniq_tax) == len(self.taxa):	# tree is perfect		
+					pass
+
+
 		bffr = ''
 		encoding = self.ortholog_encoder(min_taxa=min_spp)
 		charnames = [f"state_{i+1}" for i,x in enumerate(encoding)]
