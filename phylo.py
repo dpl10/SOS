@@ -321,7 +321,7 @@ class Tree:
 							inits[pa0][d] = 0
 
 				# Find orthologous clades
-				#print(f"{inits=}")
+				print(f"{inits=}")
 				for start in inits:
 					#print(f"{start=}")
 					prev_node = None
@@ -442,4 +442,4 @@ if __name__ == "__main__":
 		#print(tr.orthology_test(2, 4))
 		#print(tr.orthology_test(7, 6))
 		#print(tr.orthology_test(6, 7))
-		print(tr.tsv_table(3, verbose=False))
+		print(tr.tsv_table(3, verbose=True))
