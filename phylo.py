@@ -320,15 +320,17 @@ class Tree:
 					pa1 = np.where(pa1 == 1)[0][0]
 
 					if pa0 == pa1:
-						print("Here")
-						print(pa1)
-						print(pa0)
+						#print(f"{inits=}")
 						if not pa0 in inits:
 							inits[pa0] = {i:0, d:0}
+						"""
 						else:
+							print("Or here")
+							print(pa1)
+							print(pa0)
 							inits[pa0][i] = 0
 							inits[pa0][d] = 0
-
+						"""
 				# Find orthologous clades
 				print(f"{inits=}")
 				for start in inits:
@@ -380,11 +382,18 @@ class Tree:
 						continue
 					else:
 						thchar = [0 for x in self.labels]
-						#print(prev_node, curr_node)
+						print(f"{curr_node=}, {prev_node=}")
 						thleaves = self.leaves_from_node(prev_node, curr_node)
 						thtaxa = {self.taxa[x] for x in thleaves}
-						#print(f"{thtaxa=}")
+						print(f"{thtaxa=}")
 						if len(thtaxa) >= min_taxa:
+							#*******************************
+							# Possible solutions to mini trees with low taxa:
+							# - Store node richness in results np.ndarray
+							# - Simply count the number of species at the beggining and 
+							#   print a single zero column output
+							#
+							#*******************************
 							for l in thleaves:
 								thchar[labels.index(l)] = 1
 							if len(set(thchar)) >= 2: # only append informative chars
