@@ -100,6 +100,12 @@ class Tree:
 		for node in self.labels:
 			self.taxa[node] = self.labels[node].split('#')[0]
 
+		for pa,n in self.list:
+			if n in self.labels:
+				print(pa, n, self.labels[n])
+			else:
+				print(pa, n)
+
 		root_edges_idx = []
 		root_descendants = []
 
@@ -314,6 +320,9 @@ class Tree:
 					pa1 = np.where(pa1 == 1)[0][0]
 
 					if pa0 == pa1:
+						print("Here")
+						print(pa1)
+						print(pa0)
 						if not pa0 in inits:
 							inits[pa0] = {i:0, d:0}
 						else:
@@ -323,7 +332,7 @@ class Tree:
 				# Find orthologous clades
 				print(f"{inits=}")
 				for start in inits:
-					#print(f"{start=}")
+					print(f"{start=}")
 					prev_node = None
 					curr_node = start
 					#curr_excluded = list(inits[start].keys())
@@ -331,7 +340,7 @@ class Tree:
 					still = True
 					
 					while still:
-						#print(f"{curr_node=}, {prev_node=}")
+						print(f"{curr_node=}, {prev_node=}")
 						neighs = self.get_neighbors(curr_node, curr_excluded)
 						curr_excluded = [curr_node] + labels
 						cands = []
