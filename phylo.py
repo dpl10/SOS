@@ -452,7 +452,8 @@ if __name__ == "__main__":
 						wh.write(res)
 
 	else:
-		tfile = "test_trees/ygob/4777.newick" # 4741.newick 301.newick 4777.newick
+		#tfile = "test_trees/ygob/4777.newick" # 4741.newick 301.newick 4777.newick
+		tfile = "simple.newick" # 4741.newick 301.newick 4777.newick
 		tr = Tree(tfile)
 		#print(tr.list)
 		#print("\n".join([f"{x[0]}:{x[1]}" for x in tr.labels.items()]))
@@ -460,4 +461,5 @@ if __name__ == "__main__":
 		#print(tr.orthology_test(2, 4))
 		#print(tr.orthology_test(7, 6))
 		#print(tr.orthology_test(6, 7))
+		print("<<====  Table  ====>>")
 		print(tr.tsv_table(3, verbose=True))
