@@ -452,8 +452,8 @@ if __name__ == "__main__":
 						wh.write(res)
 
 	else:
-		#tfile = "test_trees/ygob/4777.newick" # 4741.newick 301.newick 4777.newick
-		tfile = "simple.newick" # 4741.newick 301.newick 4777.newick
+		tfile = "test_trees/ygob/301.newick" # 4741.newick 301.newick 4777.newick
+		#tfile = "simple.newick"
 		tr = Tree(tfile)
 		#print(tr.list)
 		#print("\n".join([f"{x[0]}:{x[1]}" for x in tr.labels.items()]))
