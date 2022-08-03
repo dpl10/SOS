@@ -368,10 +368,23 @@ class Tree:
 								
 								thnames = self.names_struc_from_node(prev_node, curr_node)
 								thnames = reduce(lambda x,y: x+y, thnames)
-								thnames = [self.taxa[x] for x in thnames]
+								thnames = {self.taxa[x] for x in thnames}
 								print(f"{thnames=}")
 
-								if not self.taxa[curr_node] in thnames: # perfect tree, again
+								if self.taxa[curr_node] in thnames: # maybe a single spp
+								
+									if len(thnames) == 1: # definitively a single spp
+
+										warnings.warn(f"Tree in file {self.tree_file} contains a single species.", stacklevel=2)
+										encoding = [[1 for x in self.labels]]
+
+										return encoding
+
+
+									else: # ===>> What could possibly be this case???
+										pass
+
+								else: # perfect tree, again
 								
 									warnings.warn(f"Tree in file {self.tree_file} is non-problematic (all terminals are different species).", stacklevel=2)
 									encoding = [[1 for x in self.labels]]
@@ -506,7 +519,8 @@ if __name__ == "__main__":
 		#tfile = "test_trees/ygob/322.newick" # medium size tree with 3 ortholog sets 
 		#tfile = "test_trees/ygob/4741.newick" # Perfect small tree
 		#tfile = "test_trees/ygob/301.newick"  # medium size tree with 2 ortholog sets
-		tfile = "test_trees/ygob/4777.newick"  #  small tree of a single sp
+		#tfile = "test_trees/ygob/4777.newick"  #  small tree of a single sp
+		tfile = "test_trees/ygob/4777_.newick"  #  small tree of two sp
 		#tfile = "simple.newick"
 		tr = Tree(tfile)
 		#print(tr.list)
