@@ -2,7 +2,6 @@ import re
 import warnings
 from functools import reduce
 from itertools import combinations
-import sys
 import numpy as np
 from scipy.sparse import csr_matrix, find
 from time import time
@@ -100,12 +99,14 @@ class Tree:
 		for node in self.labels:
 			self.taxa[node] = self.labels[node].split('#')[0]
 
+		"""
 		for pa,n in self.list:
 			if n in self.labels:
 				print(pa, n, self.labels[n])
 			else:
 				print(pa, n)
-
+		"""
+		
 		root_edges_idx = []
 		root_descendants = []
 
@@ -118,11 +119,8 @@ class Tree:
 			self.list.append([i, d])
 
 		self.list = [x for i,x in enumerate(self.list) if not i in root_edges_idx]
-		rows = [x[0] for x in self.list] + [x[1] for x in self.list]
-		cols = [x[1] for x in self.list] + [x[0] for x in self.list]
-		vals = [1 for x in rows]
-		
-		
+
+
 		"""
 		Result table. Index meaning:
 		First dimension = main node
@@ -133,6 +131,9 @@ class Tree:
 		1 = Negative
 		2 = Positive
 		"""
+		rows = [x[0] for x in self.list] + [x[1] for x in self.list]
+		cols = [x[1] for x in self.list] + [x[0] for x in self.list]
+		vals = [1 for x in rows]
 		vzeros = [0 for x in rows]
 		self.adj_table = csr_matrix((vals, (rows, cols)), 
 			shape=(self.node_count, self.node_count), dtype=np.int8)
@@ -141,11 +142,14 @@ class Tree:
 		#self.adj_table = self.adj_table.tolil()
 		
 		self.edge_coors_x, self.edge_coors_y = np.where(self.adj_table.toarray() > 0)
+		"""
+		# Coordinates of internal edges in adjacency table
 		ba = np.isin(self.edge_coors_x, list(self.taxa.keys()))
 		bb = np.isin(self.edge_coors_y, list(self.taxa.keys()))
 		self.edge_coors_x = self.edge_coors_x[~(ba | bb)]
 		self.edge_coors_y = self.edge_coors_y[~(ba | bb)]
-		
+		"""
+
 
 	def get_parent(self, node: int) -> int:
 		""""To be used exclusively with the preliminary linked list during class
@@ -182,6 +186,8 @@ class Tree:
 		the inmediate descendants of the input node. It is required to select a 
 		neighbor (`excluded`) of the latter node to orientate (root) the operation.
 		"""
+
+
 		th = self.adj_table[node].toarray().flatten()
 		children = np.where(th == 1)[0]
 		children = children[children != excluded]
@@ -221,41 +227,47 @@ class Tree:
 			r = self.adj_table[target_node].toarray().flatten() # <<===
 			icr = np.where(r == 1)[0]
 			icr = icr[icr != excluded_node]
-			internal = [x for x in icr if not x in self.labels]
-			#print(f"{internal=}")
+			icr = icr.tolist()
+			#internal = [x for x in icr if not x in self.labels]
+			#print(f"{icr=}")
 
-			if len(internal) > 0:
-				test_map = map(lambda x: self.orthology_test(x, target_node), internal)
-				
+			#if len(internal) > 0:
+			if len(icr) > 0:
 				falsies = []
-				for x in test_map:
-					if x == False: falsies.append(x)
+				for i in icr:
+					if self.orthology_test(i, target_node) == False:
+						falsies.append(i)
 
-				if len(falsies) > 0: pass_test = False
-			
-			if pass_test:
+				if len(falsies) > 0:
+					pass_test = False
+
+			if pass_test:				
 
 				# Init name_struct to the final shape  <<===
 				thleaves = self.names_struc_from_node(target_node, excluded_node)
 				#print(f"{thleaves=}")
-				name_struc = []
 
-				for brleaves in thleaves:
-					name_struc.append(set([self.taxa[x] for x in brleaves]))
+				# if target node is leaf (then thleaves == []), let's assume it is ortholog set
+				if len(thleaves) > 0: 
+
+					name_struc = []
+
+					for brleaves in thleaves:
+						name_struc.append(set([self.taxa[x] for x in brleaves]))
 
 
-				#print(name_struc)
+					#print(name_struc)
 
-				superset = reduce(lambda x,y: x | y, name_struc)
-				#print(f"{superset=}")
-				if len(superset) == 1:
-					pass_test = True
+					superset = reduce(lambda x,y: x | y, name_struc)
+					#print(f"{superset=}")
+					if len(superset) == 1:
+						pass_test = True
 
-				else:
-					for i,d in combinations(name_struc, 2):
-						if len(i & d) > 0:
-							pass_test = False
-							break
+					else:
+						for i,d in combinations(name_struc, 2):
+							if len(i & d) > 0:
+								pass_test = False
+								break
 			#print(f"{pass_test=}")
 			if pass_test:
 				self.results[target_node, excluded_node] = 2
@@ -278,10 +290,6 @@ class Tree:
 		leaves x orthologous group. Matrix is a two-dimensional list. Orthologous 
 		sets are automatically encoded as ones.
 		"""
-
-		# Minimum species parameter: allow 0 as posible value, then output everything
-		# However, print warning when not informative output (no data or perfect tree)
-		# Perfect trees: print a single column of ones
 
 		encoded_edges = []
 		encoding = []
@@ -308,8 +316,10 @@ class Tree:
 			else:
 
 				for i,d in zip(self.edge_coors_x, self.edge_coors_y):
-					_ = self.orthology_test(i,d)
-					_ = self.orthology_test(d,i)
+					if not i in self.taxa:
+						_ = self.orthology_test(i,d)
+					if not d in self.taxa:
+						_ = self.orthology_test(d,i)
 				
 				# Get starting nodes for traversal
 				inits = {}
@@ -323,52 +333,83 @@ class Tree:
 						#print(f"{inits=}")
 						if not pa0 in inits:
 							inits[pa0] = {i:0, d:0}
-						"""
-						else:
-							print("Or here")
-							print(pa1)
-							print(pa0)
-							inits[pa0][i] = 0
-							inits[pa0][d] = 0
-						"""
+
 				# Find orthologous clades
-				print(f"{inits=}")
+				#print(f"{inits=}")
 				for start in inits:
-					print(f"{start=}")
+					#print(f"{start=}")
 					prev_node = None
 					curr_node = start
 					#curr_excluded = list(inits[start].keys())
-					curr_excluded = labels
+					curr_excluded = list(inits[curr_node].keys())
 					still = True
 					
 					while still:
-						print(f"{curr_node=}, {prev_node=}")
+						#print(f"{curr_node=}, {prev_node=}")
+
 						neighs = self.get_neighbors(curr_node, curr_excluded)
-						curr_excluded = [curr_node] + labels
+
+						if neighs.shape[0] == 0: # probably in special case
+							
+							if curr_node in self.taxa:
+								
+								thnames = self.names_struc_from_node(prev_node, curr_node)
+								thnames = reduce(lambda x,y: x+y, thnames)
+								thnames = {self.taxa[x] for x in thnames}
+								#print(f"{thnames=}")
+
+								if self.taxa[curr_node] in thnames: # maybe a single spp
+								
+									if len(thnames) == 1: # definitively a single spp
+
+										warnings.warn(f"Tree in file {self.tree_file} contains a single species.", stacklevel=2)
+										encoding = [[1 for x in self.labels]]
+
+										return encoding
+
+
+									else: # ===>> What could possibly be this case???
+										pass
+
+								else: # Simple set of non-problematic taxa, less species than leaves
+								
+									warnings.warn(f"Tree in file {self.tree_file} is non-problematic.", stacklevel=2)
+									encoding = [[1 for x in self.labels]]
+								
+									return encoding
+
+						#curr_excluded = [curr_node] + labels
+						curr_excluded.append(curr_node)
 						cands = []
-					
+						#print(f"{neighs=}")
+
+						#if curr_node 
+
 						for nei in neighs:
 							test = self.results[curr_node, nei]
-					
+							#print(f"self.results[{curr_node}, {nei}] : {self.results[curr_node, nei]}")
+
 							if test == 2:
 								cands.append(nei)
 							else:
 								curr_excluded.append(nei)
-					
+						#print(f"{cands=}")
 						if len(cands) == 0:
 							still = False
+							#print("1")
 					
 						elif len(cands) == 1:
 							prev_node = curr_node
 							curr_excluded.append(curr_node)
 							curr_node = cands[0]
-					
+							#print("2")
 						else:
 							choosen = None
 							choosen_size = 0
 					
 							for c in cands:
 								th = len(self.leaves_from_node(curr_node, c))
+								#print(f"cand: {c}, leaves: {th}")
 								if choosen_size < th:
 									choosen = c
 									choosen_size = th
@@ -377,15 +418,19 @@ class Tree:
 							curr_excluded += [c for c in cands if c != choosen]
 							curr_node = choosen
 
+					#print(f"Encoded edge: {curr_node} - {prev_node}")
+					#print(f"Excluded: {curr_excluded}")
+
 					# encode char
 					if prev_node is None or (prev_node, curr_node) in encoded_edges:
 						continue
+
 					else:
 						thchar = [0 for x in self.labels]
-						print(f"{curr_node=}, {prev_node=}")
+						#print(f"{curr_node=}, {prev_node=}")
 						thleaves = self.leaves_from_node(prev_node, curr_node)
 						thtaxa = {self.taxa[x] for x in thleaves}
-						print(f"{thtaxa=}")
+						#print(f"{thtaxa=}")
 						if len(thtaxa) >= min_taxa:
 							#*******************************
 							# Possible solutions to mini trees with low taxa:
@@ -452,8 +497,15 @@ if __name__ == "__main__":
 						wh.write(res)
 
 	else:
-		#tfile = "test_trees/ygob/4777.newick" # 4741.newick 301.newick 4777.newick
-		tfile = "simple.newick" # 4741.newick 301.newick 4777.newick
+		#tfile = "test_trees/ygob/3162.newick" # Perfect medium tree
+		#tfile = "test_trees/ygob/3162_der.newick" # Perfect tree with a single duplicated species
+		#tfile = "test_trees/ygob/3162_der_der.newick" # Medium tree in which clipping a single duplicated species makes a perfect case
+		#tfile = "test_trees/ygob/322.newick" # medium size tree with 3 ortholog sets 
+		#tfile = "test_trees/ygob/4741.newick" # Perfect small tree
+		tfile = "test_trees/ygob/301.newick"  # medium size tree with 2 ortholog sets
+		#tfile = "test_trees/ygob/4777.newick"  #  small tree of a single sp
+		#tfile = "test_trees/ygob/4777_.newick"  #  small tree of two sp
+		#tfile = "simple.newick"
 		tr = Tree(tfile)
 		#print(tr.list)
 		#print("\n".join([f"{x[0]}:{x[1]}" for x in tr.labels.items()]))
