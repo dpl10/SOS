@@ -99,13 +99,13 @@ class Tree:
 		for node in self.labels:
 			self.taxa[node] = self.labels[node].split('#')[0]
 
-		"""
+		#"""
 		for pa,n in self.list:
 			if n in self.labels:
 				print(pa, n, self.labels[n])
 			else:
 				print(pa, n)
-		"""
+		#"""
 		
 		root_edges_idx = []
 		root_descendants = []
@@ -335,9 +335,9 @@ class Tree:
 							inits[pa0] = {i:0, d:0}
 
 				# Find orthologous clades
-				#print(f"{inits=}")
+				print(f"{inits=}")
 				for start in inits:
-					#print(f"{start=}")
+					print(f"{start=}")
 					prev_node = None
 					curr_node = start
 					#curr_excluded = list(inits[start].keys())
@@ -345,7 +345,7 @@ class Tree:
 					still = True
 					
 					while still:
-						#print(f"{curr_node=}, {prev_node=}")
+						print(f"{curr_node=}, {prev_node=}")
 
 						neighs = self.get_neighbors(curr_node, curr_excluded)
 
@@ -356,7 +356,7 @@ class Tree:
 								thnames = self.names_struc_from_node(prev_node, curr_node)
 								thnames = reduce(lambda x,y: x+y, thnames)
 								thnames = {self.taxa[x] for x in thnames}
-								#print(f"{thnames=}")
+								print(f"{thnames=}")
 
 								if self.taxa[curr_node] in thnames: # maybe a single spp
 								
@@ -381,9 +381,7 @@ class Tree:
 						#curr_excluded = [curr_node] + labels
 						curr_excluded.append(curr_node)
 						cands = []
-						#print(f"{neighs=}")
-
-						#if curr_node 
+						print(f"{neighs=}")
 
 						for nei in neighs:
 							test = self.results[curr_node, nei]
@@ -393,7 +391,7 @@ class Tree:
 								cands.append(nei)
 							else:
 								curr_excluded.append(nei)
-						#print(f"{cands=}")
+						print(f"{cands=}")
 						if len(cands) == 0:
 							still = False
 							#print("1")
@@ -502,9 +500,9 @@ if __name__ == "__main__":
 		#tfile = "test_trees/ygob/3162_der_der.newick" # Medium tree in which clipping a single duplicated species makes a perfect case
 		#tfile = "test_trees/ygob/322.newick" # medium size tree with 3 ortholog sets 
 		#tfile = "test_trees/ygob/4741.newick" # Perfect small tree
-		tfile = "test_trees/ygob/301.newick"  # medium size tree with 2 ortholog sets
+		#tfile = "test_trees/ygob/301.newick"  # medium size tree with 2 ortholog sets
 		#tfile = "test_trees/ygob/4777.newick"  #  small tree of a single sp
-		#tfile = "test_trees/ygob/4777_.newick"  #  small tree of two sp
+		tfile = "test_trees/ygob/4777_.newick"  #  small tree of two sp
 		#tfile = "simple.newick"
 		tr = Tree(tfile)
 		#print(tr.list)
@@ -514,4 +512,4 @@ if __name__ == "__main__":
 		#print(tr.orthology_test(7, 6))
 		#print(tr.orthology_test(6, 7))
 		print("<<====  Table  ====>>")
-		print(tr.tsv_table(3, verbose=True))
+		print(tr.tsv_table(1, verbose=True))
