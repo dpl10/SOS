@@ -307,10 +307,15 @@ class Tree:
 
 		if get_table:
 		
-			if len(uniq_tax) == len(self.taxa):	# tree is perfect		
+			if len(uniq_tax) == len(self.taxa):
 
 				warnings.warn(f"Tree in file {self.tree_file} is non-problematic (all terminals are different species).",
 					stacklevel=2)
+				encoding = [[1 for x in self.labels]]
+
+			elif len(uniq_tax) == 1:
+
+				warnings.warn(f"Tree in file {self.tree_file} contains a single species.", stacklevel=2)
 				encoding = [[1 for x in self.labels]]
 
 			else:
@@ -349,34 +354,30 @@ class Tree:
 
 						neighs = self.get_neighbors(curr_node, curr_excluded)
 
+						"""######################################
+						===>> Check if this test is necessary
+	
 						if neighs.shape[0] == 0: # probably in special case
 							
 							if curr_node in self.taxa:
 								
-								thnames = self.names_struc_from_node(prev_node, curr_node)
+								thnames = self.names_struc_from_node(prev_node, curr_node) # Names from the rest of the network
 								thnames = reduce(lambda x,y: x+y, thnames)
 								thnames = {self.taxa[x] for x in thnames}
 								print(f"{thnames=}")
 
-								if self.taxa[curr_node] in thnames: # maybe a single spp
-								
-									if len(thnames) == 1: # definitively a single spp
+								if not self.taxa[curr_node] in thnames:
+									print("The whole tree is an ortholog group.")
+									#encoding.append([1 for x in self.labels])
+									#return encoding
 
-										warnings.warn(f"Tree in file {self.tree_file} contains a single species.", stacklevel=2)
-										encoding = [[1 for x in self.labels]]
+								else:
+									print("The rest of the tree is a single ortholog group.")
+									pass 
 
-										return encoding
-
-
-									else: # ===>> What could possibly be this case???
-										pass
-
-								else: # Simple set of non-problematic taxa, less species than leaves
-								
-									warnings.warn(f"Tree in file {self.tree_file} is non-problematic.", stacklevel=2)
-									encoding = [[1 for x in self.labels]]
-								
-									return encoding
+							else:
+								raise ValueError(f"{self.tree_file} got unexpected case 0.")
+						"""
 
 						#curr_excluded = [curr_node] + labels
 						curr_excluded.append(curr_node)
@@ -391,6 +392,7 @@ class Tree:
 								cands.append(nei)
 							else:
 								curr_excluded.append(nei)
+
 						print(f"{cands=}")
 						if len(cands) == 0:
 							still = False
@@ -496,13 +498,13 @@ if __name__ == "__main__":
 
 	else:
 		#tfile = "test_trees/ygob/3162.newick" # Perfect medium tree
-		#tfile = "test_trees/ygob/3162_der.newick" # Perfect tree with a single duplicated species
-		#tfile = "test_trees/ygob/3162_der_der.newick" # Medium tree in which clipping a single duplicated species makes a perfect case
-		#tfile = "test_trees/ygob/322.newick" # medium size tree with 3 ortholog sets 
+		tfile = "3162_der.newick" # Perfect tree with a single duplicated species
+		#tfile = "3162_der_der.newick" # Medium tree in which clipping a single duplicated species makes a perfect case
+		#tfile = "test_trees/ygob/322.newick" # medium size tree with 4 ortholog sets 
 		#tfile = "test_trees/ygob/4741.newick" # Perfect small tree
-		#tfile = "test_trees/ygob/301.newick"  # medium size tree with 2 ortholog sets
+		#tfile = "test_trees/ygob/301.newick"  # medium size tree with 4 ortholog sets
 		#tfile = "test_trees/ygob/4777.newick"  #  small tree of a single sp
-		tfile = "test_trees/ygob/4777_.newick"  #  small tree of two sp
+		#tfile = "4777_.newick"  #  small tree of two sp
 		#tfile = "simple.newick"
 		tr = Tree(tfile)
 		#print(tr.list)
