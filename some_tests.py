@@ -38,7 +38,7 @@ if os.path.exists(ar):
 				tracemalloc.stop()
 				bffr += f"{infile}\t{len(tr.labels)}\t{itime}\t{etime}\t{ttime}\t{mem[0] / 1000}\t{mem[1] / 1000}\n"
 				count += 1
-				if count > 10: break
+				#if count > 10: break
 				print("#" * 80)
 				
 else:
