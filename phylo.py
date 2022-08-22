@@ -8,7 +8,7 @@ from time import time
 
 class Tree:
 	"""Simple class to manipulate unrooted phylogenetic trees."""
-	def __init__(self, tree_file: str):
+	def __init__(self, tree_file: str, debug: bool = False):
 		"""Instantiates Tree class from a Newick tree file. Trees could have 
 		polytomies, branch lengths are discarded."""
 		self.list = []
@@ -99,13 +99,12 @@ class Tree:
 		for node in self.labels:
 			self.taxa[node] = self.labels[node].split('#')[0]
 
-		#"""
-		for pa,n in self.list:
-			if n in self.labels:
-				print(pa, n, self.labels[n])
-			else:
-				print(pa, n)
-		#"""
+		if debug:
+			for pa,n in self.list:
+				if n in self.labels:
+					print(pa, n, self.labels[n])
+				else:
+					print(pa, n)
 		
 		root_edges_idx = []
 		root_descendants = []
@@ -120,17 +119,17 @@ class Tree:
 
 		self.list = [x for i,x in enumerate(self.list) if not i in root_edges_idx]
 
-
-		"""
-		Result table. Index meaning:
-		First dimension = main node
-		Second dimension = excluded node
+		#####################################
+		# Result table. Index meaning:
+		# First dimension = main node
+		# Second dimension = excluded node
 		
-		Values
-		0 = Not computed yet
-		1 = Negative
-		2 = Positive
-		"""
+		# Values
+		# 0 = Not computed yet
+		# 1 = Negative
+		#2 = Positive
+		#####################################
+
 		rows = [x[0] for x in self.list] + [x[1] for x in self.list]
 		cols = [x[1] for x in self.list] + [x[0] for x in self.list]
 		vals = [1 for x in rows]
@@ -139,16 +138,8 @@ class Tree:
 			shape=(self.node_count, self.node_count), dtype=np.int8)
 		self.results = csr_matrix((vzeros, (rows, cols)), 
 			shape=(self.node_count, self.node_count), dtype=np.int8)
-		#self.adj_table = self.adj_table.tolil()
 		
-		self.edge_coors_x, self.edge_coors_y = np.where(self.adj_table.toarray() > 0)
-		"""
-		# Coordinates of internal edges in adjacency table
-		ba = np.isin(self.edge_coors_x, list(self.taxa.keys()))
-		bb = np.isin(self.edge_coors_y, list(self.taxa.keys()))
-		self.edge_coors_x = self.edge_coors_x[~(ba | bb)]
-		self.edge_coors_y = self.edge_coors_y[~(ba | bb)]
-		"""
+		self.edge_coors_x, self.edge_coors_y = np.where(self.adj_table.toarray() > 0)		
 
 
 	def get_parent(self, node: int) -> int:
@@ -204,11 +195,11 @@ class Tree:
 		for child in no_leaves:
 			struc.append(self.leaves_from_node(child, node))
 		
-		return struc
 		# ===>>  Reorder nodes
-		# ===>>  Create dict or Bloom filter (?) to store times a sp is inserted in the tree  
+		# ===>>  Create dict or Bloom filter to store times a sp is inserted in the tree  
 		#  [[24, 25], [27, 29, 30, 31]]
 		# [[24], [25], [27, 29, 30, 31]]
+		return struc
 
 
 	def orthology_test(self, target_node: int, excluded_node: int) -> bool:
@@ -284,7 +275,24 @@ class Tree:
 		return pass_test
 
 
-	def ortholog_encoder(self, min_taxa : int, verbose : bool) -> list:
+	def pivot_node(self, node: int) -> bool:
+		"""
+		Conducts iteratively ortholog tests on all the edges that converge into 
+		a selected node, using its neighbors as the excluded node of the tests.
+		"""
+		out = True
+		neighs = self.get_neighbors(node=node)
+
+		for nei in neighs:
+
+			if self.orthology_test(node, nei) == False:
+				out = False
+				break
+
+		return out
+
+
+	def ortholog_encoder(self, min_taxa : int, verbose : bool, debug : bool = False) -> list:
 		"""
 		Encodes orthologous groups found in the input tree into a matrix of shape
 		leaves x orthologous group. Matrix is a two-dimensional list. Orthologous 
@@ -335,81 +343,61 @@ class Tree:
 					pa1 = np.where(pa1 == 1)[0][0]
 
 					if pa0 == pa1:
-						#print(f"{inits=}")
 						if not pa0 in inits:
 							inits[pa0] = {i:0, d:0}
 
 				# Find orthologous clades
-				print(f"{inits=}")
+				if debug: print(f"{inits=}")
+
 				for start in inits:
-					print(f"{start=}")
+					if debug: print(f"{start=}")
 					prev_node = None
 					curr_node = start
-					#curr_excluded = list(inits[start].keys())
 					curr_excluded = list(inits[curr_node].keys())
 					still = True
 					
 					while still:
-						print(f"{curr_node=}, {prev_node=}")
+						if debug: print(f"{curr_node=}, {prev_node=}")
 
 						neighs = self.get_neighbors(curr_node, curr_excluded)
 
-						"""######################################
-						===>> Check if this test is necessary
-	
-						if neighs.shape[0] == 0: # probably in special case
-							
-							if curr_node in self.taxa:
+						if neighs.shape[0] == 0:
+							# Check for single-species clades that and make non-problematic trees
+
+							if self.pivot_node(prev_node): 
 								
-								thnames = self.names_struc_from_node(prev_node, curr_node) # Names from the rest of the network
-								thnames = reduce(lambda x,y: x+y, thnames)
-								thnames = {self.taxa[x] for x in thnames}
-								print(f"{thnames=}")
+								warnings.warn(f"Tree in file {self.tree_file} is a non-problematic (but some species have multiple terminals).", stacklevel=2)
+								encoding = [[1 for x in self.labels]]
+								return encoding
 
-								if not self.taxa[curr_node] in thnames:
-									print("The whole tree is an ortholog group.")
-									#encoding.append([1 for x in self.labels])
-									#return encoding
-
-								else:
-									print("The rest of the tree is a single ortholog group.")
-									pass 
-
-							else:
-								raise ValueError(f"{self.tree_file} got unexpected case 0.")
-						"""
-
-						#curr_excluded = [curr_node] + labels
 						curr_excluded.append(curr_node)
 						cands = []
-						print(f"{neighs=}")
+						if debug: print(f"{neighs=}")
 
 						for nei in neighs:
 							test = self.results[curr_node, nei]
-							#print(f"self.results[{curr_node}, {nei}] : {self.results[curr_node, nei]}")
-
+							
 							if test == 2:
 								cands.append(nei)
 							else:
 								curr_excluded.append(nei)
 
-						print(f"{cands=}")
+						if debug: print(f"{cands=}")
 						if len(cands) == 0:
 							still = False
-							#print("1")
-					
+							
 						elif len(cands) == 1:
 							prev_node = curr_node
 							curr_excluded.append(curr_node)
 							curr_node = cands[0]
-							#print("2")
+							
 						else:
 							choosen = None
 							choosen_size = 0
 					
 							for c in cands:
 								th = len(self.leaves_from_node(curr_node, c))
-								#print(f"cand: {c}, leaves: {th}")
+								
 								if choosen_size < th:
 									choosen = c
 									choosen_size = th
@@ -418,29 +406,20 @@ class Tree:
 							curr_excluded += [c for c in cands if c != choosen]
 							curr_node = choosen
 
-					#print(f"Encoded edge: {curr_node} - {prev_node}")
-					#print(f"Excluded: {curr_excluded}")
-
 					# encode char
 					if prev_node is None or (prev_node, curr_node) in encoded_edges:
 						continue
 
 					else:
 						thchar = [0 for x in self.labels]
-						#print(f"{curr_node=}, {prev_node=}")
 						thleaves = self.leaves_from_node(prev_node, curr_node)
 						thtaxa = {self.taxa[x] for x in thleaves}
-						#print(f"{thtaxa=}")
+						
 						if len(thtaxa) >= min_taxa:
-							#*******************************
-							# Possible solutions to mini trees with low taxa:
-							# - Store node richness in results np.ndarray
-							# - Simply count the number of species at the beggining and 
-							#   print a single zero column output
-							#
-							#*******************************
+
 							for l in thleaves:
 								thchar[labels.index(l)] = 1
+
 							if len(set(thchar)) >= 2: # only append informative chars
 								encoding.append(thchar) 
 								encoded_edges.append((prev_node, curr_node))
@@ -448,10 +427,10 @@ class Tree:
 		return encoding
 
 
-	def tsv_table(self, min_spp : int = 3, verbose : bool = False):
+	def tsv_table(self, min_spp : int = 3, verbose : bool = False, debug: bool = False):
 
 		bffr = ''
-		encoding = self.ortholog_encoder(min_taxa=min_spp, verbose=verbose)
+		encoding = self.ortholog_encoder(min_taxa=min_spp, verbose=verbose, debug=debug)
 
 		if len(encoding) > 0:
 	
@@ -513,5 +492,5 @@ if __name__ == "__main__":
 		#print(tr.orthology_test(2, 4))
 		#print(tr.orthology_test(7, 6))
 		#print(tr.orthology_test(6, 7))
-		print("<<====  Table  ====>>")
-		print(tr.tsv_table(1, verbose=True))
+		#print("<<====  Table  ====>>")
+		print(tr.tsv_table(1, verbose=True, debug=True))

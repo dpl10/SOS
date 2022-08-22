@@ -4,7 +4,7 @@ import phylo
 import os
 import sys
 
-ar = sys.argv[1]
+ar = "test_trees/ygob"
 count = 0
 bffr = "File\tTerminals\tReading time (s)\tEncoding time (s)\tTotal time (s)\tCurrent memory (KB)\tPeak memory (KB)\n"
 
@@ -25,7 +25,7 @@ if os.path.exists(ar):
 				#print("\n\nInstantiation time:", itime, "seconds")
 				#print(f"{len(tr.labels)=}")
 				#l0 = tr.ortholog_encoder()
-				l1 = tr.tsv_table(3)
+				l1 = tr.tsv_table(1, verbose=True, debug=False)
 				print(l1)
 				time2 = time()
 				etime = time2 - time1
