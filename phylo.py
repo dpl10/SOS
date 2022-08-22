@@ -114,18 +114,17 @@ class Tree:
 				root_descendants.append(edge[1])
 				root_edges_idx.append(idx)
 		
-		for i,d in combinations(root_descendants, 2):
-			self.list.append([i, d])
+		#for i,d in combinations(root_descendants, 2):
+		#	self.list.append([i, d])
+
+		if len(root_descendants) == 2:
+			self.list.append([root_descendants[0], root_descendants[1]])
+		else:
+			for des in root_descendants:
+				self.list.append([self.node_count, des])
+			self.node_count += 1
 
 		self.list = [x for i,x in enumerate(self.list) if not i in root_edges_idx]
-
-		if debug:
-			print("\n")
-			for pa,n in self.list:
-				if n in self.labels:
-					print(pa, n, self.labels[n])
-				else:
-					print(pa, n)
 		
 		#####################################
 		# Result table. Index meaning:
@@ -149,9 +148,6 @@ class Tree:
 		
 		self.edge_coors_x, self.edge_coors_y = np.where(self.adj_table.toarray() > 0)
 
-		print("self.adj_table:\n", np.array2string(self.adj_table))	
-		print("self.edge_coors_x:\n", np.array2string(self.edge_coors_x))
-		print("self.edge_coors_y:\n", np.array2string(self.edge_coors_y))
 
 	def get_parent(self, node: int) -> int:
 		""""To be used exclusively with the preliminary linked list during class
@@ -487,12 +483,12 @@ if __name__ == "__main__":
 						wh.write(res)
 
 	else:
-		tfile = "test_trees/ygob/149.newick"
+		#tfile = "test_trees/ygob/149.newick" # Medium size tree with polytomies, one at base
 		#tfile = "test_trees/ygob/3162.newick" # Perfect medium tree
 		#tfile = "3162_der.newick" # Perfect tree with a single duplicated species
 		#tfile = "3162_der_der.newick" # Medium tree in which clipping a single duplicated species makes a perfect case
 		#tfile = "test_trees/ygob/322.newick" # medium size tree with 4 ortholog sets 
-		#tfile = "test_trees/ygob/4741.newick" # Perfect small tree
+		tfile = "test_trees/ygob/4741.newick" # Perfect small tree
 		#tfile = "test_trees/ygob/301.newick"  # medium size tree with 4 ortholog sets
 		#tfile = "test_trees/ygob/4777.newick"  #  small tree of a single sp
 		#tfile = "4777_.newick"  #  small tree of two sp
