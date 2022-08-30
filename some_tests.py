@@ -44,7 +44,7 @@ if os.path.exists(ar):
 else:
 	print(f"{ar} is not a valid folder!")
 
-with open("some_stats_ygob.tsv", "w") as fh:
+with open("ygob_stats.tsv", "w") as fh:
 	fh.write(bffr)
 
 exit()

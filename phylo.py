@@ -483,7 +483,8 @@ if __name__ == "__main__":
 						wh.write(res)
 
 	else:
-		tfile = "test_trees/ygob/149.newick" # Medium size tree with polytomies, one at base
+		tfile = "test_trees/ygob/37.newick"
+		#tfile = "test_trees/ygob/149.newick" # Medium size tree with polytomies, one at base
 		#tfile = "test_trees/ygob/3162.newick" # Perfect medium tree
 		#tfile = "3162_der.newick" # Perfect tree with a single duplicated species
 		#tfile = "3162_der_der.newick" # Medium tree in which clipping a single duplicated species makes a perfect case
