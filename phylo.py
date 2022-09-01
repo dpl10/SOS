@@ -353,6 +353,13 @@ class Tree:
 						if not pa0 in inits:
 							inits[pa0] = {i:0, d:0}
 
+							# if polytomy, add the other descendent leaves
+							other_leaves = self.get_neighbors(pa0, [i, d])
+							other_leaves = [x for x in other_leaves if x in self.labels]
+							for n in other_leaves:
+								inits[pa0][n] = 0
+
+
 				# Find orthologous clades
 				if debug: print(f"{inits=}")
 
