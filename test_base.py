@@ -5,7 +5,8 @@ import warnings
 
 tree_dir = "test_files"
 t0 = "3162.newick" # Perfect medium tree
-t1 = "4777.newick"  #  small tree of a single sp
+t1 = "4777.newick"  #  Small tree of a single sp
+t2 = "322.newick" # Medium size tree with 4 ortholog sets
 
 def get_char_stats(tsv_text):
 
@@ -58,7 +59,21 @@ def test_tiny_single():
 		assert re.search(r'Tree in file .+\.newick contains a single species.', str(w[0].message))
 
 
+def test_med_four():
+
+	tfile = os.path.join(tree_dir, t2)
+	tr = Tree(tfile)
+
+	with warnings.catch_warnings(record=True) as w:
+		warnings.simplefilter("always")
+		out = tr.tsv_table(1, verbose=True)
+		chars, last_states = get_char_stats(out)
+
+		assert chars == 4
+		assert len(last_states) == 2
+		assert len(w) == 0
+
 
 if __name__ == "__main__":
 
-	test_tiny_single()
+	test_med_four()
