@@ -490,8 +490,8 @@ if __name__ == "__main__":
 						wh.write(res)
 
 	else:
-		tfile = "test_trees/ygob/37.newick"
-		#tfile = "test_trees/ygob/149.newick" # Medium size tree with polytomies, one at base
+		#tfile = "test_trees/ygob/37.newick"
+		tfile = "test_trees/ygob/149.newick" # Medium size tree with polytomies, one at base
 		#tfile = "test_trees/ygob/3162.newick" # Perfect medium tree
 		#tfile = "3162_der.newick" # Perfect tree with a single duplicated species
 		#tfile = "3162_der_der.newick" # Medium tree in which clipping a single duplicated species makes a perfect case
@@ -501,7 +501,7 @@ if __name__ == "__main__":
 		#tfile = "test_trees/ygob/4777.newick"  #  small tree of a single sp
 		#tfile = "4777_.newick"  #  small tree of two sp
 		#tfile = "simple.newick"
-		tr = Tree(tfile, debug=True)
+		tr = Tree(tfile, debug=False)
 		#print(tr.list)
 		#print("\n".join([f"{x[0]}:{x[1]}" for x in tr.labels.items()]))
 		#print(tr.orthology_test(29, 5))
@@ -509,4 +509,4 @@ if __name__ == "__main__":
 		#print(tr.orthology_test(7, 6))
 		#print(tr.orthology_test(6, 7))
 		#print("<<====  Table  ====>>")
-		print(tr.tsv_table(1, verbose=True, debug=True))
+		print(tr.tsv_table(1, verbose=True, debug=False))
