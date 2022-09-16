@@ -10,7 +10,7 @@ t1 = "4777.newick"  #  Small tree of a single sp
 t2 = "322.newick" # Medium size tree with 4 ortholog sets
 t3 = "3162_der.newick" # Perfect tree with a single duplicated species
 t4 = "3162_der_der.newick" # Medium tree in which clipping a single duplicated species makes a perfect case
-
+t5 = "149.newick" # Medium size tree with polytomies, one at base
 
 def get_char_stats(tsv_text):
 
@@ -136,7 +136,24 @@ def test_almost_perfect():
 		assert np.unique(mat[~idx1, 0]) == [1]
 
 
+def test_base_polytomy():
+
+	tfile = os.path.join(tree_dir, t5)
+	tr = Tree(tfile)
+
+	with warnings.catch_warnings(record=True) as w:
+		warnings.simplefilter("always")
+		out = tr.tsv_table(1, verbose=True)
+		print(out)
+		chars, last_states = get_char_stats(out)
+
+		assert chars == 1
+		assert len(last_states) == 1
+		assert len(w) == 1
+		assert re.search(r'Tree in file .+\.newick is a non-problematic \(but some species have multiple terminals\).', str(w[0].message))
+
+
 
 if __name__ == "__main__":
 
-	test_perfect_duplication()
+	test_base_polytomy()
