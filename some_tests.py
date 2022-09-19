@@ -2,7 +2,6 @@ from time import time
 import tracemalloc
 import phylo
 import os
-import sys
 
 ar = "test_trees/ygob"
 count = 0
@@ -44,7 +43,7 @@ if os.path.exists(ar):
 else:
 	print(f"{ar} is not a valid folder!")
 
-with open("ygob_stats.tsv", "w") as fh:
+with open("ygob_benchmark_stats.tsv", "w") as fh:
 	fh.write(bffr)
 
 exit()
