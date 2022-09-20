@@ -12,6 +12,7 @@ t3 = "3162_der.newick" # Perfect tree with a single duplicated species
 t4 = "3162_der_der.newick" # Medium tree in which clipping a single duplicated species makes a perfect case
 t5 = "149.newick" # Medium size tree with polytomies, one at base
 t6 = "301.newick"  # medium size tree with 4 ortholog sets
+t7 = "4925.newick" # Star phylogeny of 4 terms - 2 taxa
 
 def get_char_stats(tsv_text):
 
@@ -210,7 +211,23 @@ def test_med_four():
 		assert len(w) == 0
 
 
+def test_tiny_star():
+
+	tfile = os.path.join(tree_dir, t7)
+	tr = Tree(tfile)
+	
+	with warnings.catch_warnings(record=True) as w:
+		warnings.simplefilter("always")
+		out = tr.tsv_table(1, verbose=True)
+		chars, last_states = get_char_stats(out)
+		#print(chars, states)
+		assert chars == 1
+		assert last_states == set('0')
+		#print(w[0].message)
+		assert len(w) == 1
+		assert re.search(r'Tree in file .+\.newick is uninformative \(star phylogeny\)', str(w[0].message))
+
 
 if __name__ == "__main__":
 
-	test_med_four()
+	test_tiny_star()

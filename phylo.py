@@ -376,13 +376,21 @@ class Tree:
 						neighs = self.get_neighbors(curr_node, curr_excluded)
 
 						if neighs.shape[0] == 0:
-							# Check for single-species clades that and make non-problematic trees
+							# Check for single-species clades that make non-problematic trees
+							
+							if prev_node:
 
-							if self.pivot_node(prev_node): 
-								
-								warnings.warn(f"Tree in file {self.tree_file} is a non-problematic (but some species have multiple terminals).", stacklevel=2)
-								encoding = [[1 for x in self.labels]]
-								return encoding
+								if self.pivot_node(prev_node): 
+									
+									warnings.warn(f"Tree in file {self.tree_file} is a non-problematic (but some species have multiple terminals).", stacklevel=2)
+									encoding = [[1 for x in self.labels]]
+									return encoding
+
+							else:
+
+								warnings.warn(f"Tree in file {self.tree_file} is uninformative (star phylogeny).", stacklevel=2)
+								encoding = [[0 for x in self.labels]]
+								return encoding								
 
 						curr_excluded.append(curr_node)
 						cands = []
@@ -490,7 +498,7 @@ if __name__ == "__main__":
 						wh.write(res)
 
 	else:
-		tfile = "test_trees/ygob/4925.newick"
+		tfile = "test_trees/ygob/4925.newick" # Star phylogeny of 4 terms - 2 taxa
 		#tfile = "test_trees/ygob/149.newick" # Medium size tree with polytomies, one at base
 		#tfile = "test_trees/ygob/3162.newick" # Perfect medium tree
 		#tfile = "3162_der.newick" # Perfect tree with a single duplicated species
