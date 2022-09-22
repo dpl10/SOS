@@ -18,3 +18,44 @@ SOS: Sequestering Orthologous Subclades
 3. The unrooted tree is traversed postorder, but traversal is stopped to retrieve the most inclusive orthologous clades.
 
 4. An output matrix is initialized, and a column is encoded for each orthologous clade from step 3.
+
+# Requirements
+
+- Python 3 interpreter.
+- Numpy.
+- Scipy.
+- Pytest (for testing).
+
+# Installation
+
+
+# Usage
+
+`sos.py -t <tree_file> -m <#> [-v] > output_tsv_file`
+
+__where__:
+
+|||
+|:---|:---|
+| `-t` | Input tree file. |
+| `-m` | Minimum taxa per orthologous set. |
+| `-v` | Activates verbose mode. |
+
+By default the script does not produce any output under non-informative circunstances, 
+such as the tree having a single species, a single representative per species or 
+not containing any orthologous set. In verbose mode, it will output a non-informative 
+matrix for each one of these cases.
+
+# License
+
+
+
+# Contact
+
+Nelson R. Salinas  
+nrsalinas@gmail.com  
+
+Damon Little  
+dlittle@nybg.org
+
+New York Botanical Garden
