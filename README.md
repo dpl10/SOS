@@ -35,10 +35,10 @@ SOS: Sequestering Orthologous Subclades
 
 __where__:
 
-|||
+| Option | Explanation |
 |:---|:---|
-| `-t` | Input tree file. |
-| `-m` | Minimum taxa per orthologous set. |
+| `-t` | Input tree file in Newick or TNT format. The file should contain a single tree. |
+| `-m` | Minimum taxa per orthologous set (default = 4) |
 | `-v` | Activates verbose mode. |
 
 By default the script does not produce any output under non-informative circunstances, 

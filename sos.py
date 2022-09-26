@@ -5,7 +5,7 @@ import os
 from phylo import Tree
 
 tree_file = None
-min_tax = 0
+min_tax = 4
 verbose_mode = False
 debug_mode = False
 
@@ -19,7 +19,7 @@ USAGE:	sos.py -t <tree_file> -m <#> [-v] > output_tsv_file
 WHERE:
 	-t	Input tree file.
 
-	-m	Minimum taxa per orthologous set (default: 4).
+	-m	Minimum taxa per orthologous set (default = 4).
 
 	-v	Verbose mode: outputs a matrix if there are a single orthologous set (single
 		column of ones) or if there are none (single column of zeros).
