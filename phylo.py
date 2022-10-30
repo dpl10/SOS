@@ -22,6 +22,7 @@ class Tree:
 
 		#########################################
 		# Test on tree files with superflous parentheses
+		# Continue tests on TNT files
 
 		with open(tree_file , "r") as fh:
 			for line in fh:
@@ -127,14 +128,16 @@ class Tree:
 		self.list = [x for i,x in enumerate(self.list) if not i in root_edges_idx]
 		
 		#####################################
-		# Result table. Index meaning:
-		# First dimension = main node
-		# Second dimension = excluded node
-		
-		# Values
-		# 0 = Not computed yet
-		# 1 = Negative
-		# 2 = Positive
+		# 			Result table.
+		#
+		# Index meaning:
+		#   First dimension = main node
+		#   Second dimension = excluded node
+		#
+		# Values: 
+		#  0 = Not computed yet
+		#  1 = Negative
+		#  2 = Positive
 		#####################################
 
 		rows = [x[0] for x in self.list] + [x[1] for x in self.list]
@@ -202,10 +205,6 @@ class Tree:
 		for child in no_leaves:
 			struc.append(self.leaves_from_node(child, node))
 		
-		# ===>>  Reorder nodes
-		# ===>>  Create dict or Bloom filter to store times a sp is inserted in the tree  
-		#  [[24, 25], [27, 29, 30, 31]]
-		# [[24], [25], [27, 29, 30, 31]]
 		return struc
 
 
@@ -498,23 +497,6 @@ if __name__ == "__main__":
 						wh.write(res)
 
 	else:
-		tfile = "test_trees/ygob/4925.newick" # Star phylogeny of 4 terms - 2 taxa
-		#tfile = "test_trees/ygob/149.newick" # Medium size tree with polytomies, one at base
-		#tfile = "test_trees/ygob/3162.newick" # Perfect medium tree
-		#tfile = "3162_der.newick" # Perfect tree with a single duplicated species
-		#tfile = "3162_der_der.newick" # Medium tree in which clipping a single duplicated species makes a perfect case
-		#tfile = "test_trees/ygob/322.newick" # medium size tree with 4 ortholog sets 
-		#tfile = "test_trees/ygob/4741.newick" # Perfect small tree
-		#tfile = "test_trees/ygob/301.newick"  # medium size tree with 4 ortholog sets
-		#tfile = "test_trees/ygob/4777.newick"  #  small tree of a single sp
-		#tfile = "4777_.newick"  #  small tree of two sp
-		#tfile = "simple.newick"
+		tfile = "test_trees/ygob/4741.tre" # Perfect small tree
 		tr = Tree(tfile, debug=True)
-		#print(tr.list)
-		#print("\n".join([f"{x[0]}:{x[1]}" for x in tr.labels.items()]))
-		#print(tr.orthology_test(29, 5))
-		#print(tr.orthology_test(2, 4))
-		#print(tr.orthology_test(7, 6))
-		#print(tr.orthology_test(6, 7))
-		#print("<<====  Table  ====>>")
 		print(tr.tsv_table(1, verbose=True, debug=True))

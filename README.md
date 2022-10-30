@@ -1,21 +1,25 @@
 # SOS
-SOS: Sequestering Orthologous Subclades
+SOS: Sequestering Orthologous Subclades.
 
-# Algorithm description
+A Python utility to encode sets of ortholog sequences in a phylogenetic tree, assuming a simple ortholog membership rule.
 
-**Input:** A phylogenetic tree stored in Newick or TNT formats. Polytomies are treated as such. 
+Polytomies are treated as such.
+
+#### Procedure description
+
+**Input:** A text file containing a single phylogenetic tree, following the Newick or TNT standard. 
 
 **Output:** A tsv table in which rows are tree terminal labels and columns are encoded orthologous clades.
 
-1. The tree is unrooted and stored in memory as an adjacency matrix.
+1. The tree is unrooted and stored in memory as an sparse adjacency matrix.
 
-2. Internal nodes are tested for the ortholog condition. This condition assumes that a valid ortholog node:
+2. All internal nodes are tested for the ortholog condition. This condition assumes that a valid ortholog node:
 
 	a. Has two or more descendant taxa.
 
 	b. All descendant taxa conform to a set of mutually exclusive clades.
 
-3. The unrooted tree is traversed postorder, but traversal is stopped to retrieve the most inclusive orthologous clades.
+3. The unrooted tree is traversed postorderly, and the most inclusive orthologous clades are retrieved.
 
 4. An output matrix is initialized, and a column is encoded for each orthologous clade from step 3.
 
@@ -48,7 +52,9 @@ matrix for each one of these cases.
 
 # License
 
+Copyright (c) 2022 Nelson R. Salinas & Damon Little.
 
+SOS is available under the MIT License. See LICENSE for more information.
 
 # Contact
 
