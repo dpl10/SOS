@@ -478,25 +478,3 @@ class Tree:
 		th = th[~np.isin(th, excluded)]
 		return th
 
-
-if __name__ == "__main__":
-	import os
-
-	tsv = False
-
-	if tsv:
-		for d, s, f in os.walk('test_trees/'):
-			for filito in f:
-				if filito.endswith('.newick'):
-					print(filito)
-					file = os.path.join(d, filito)
-					root = file.rstrip('.newick')
-					thnet = Tree(file)
-					res = thnet.tsv_table(3)
-					with open(f'{root}.tsv', 'w') as wh:
-						wh.write(res)
-
-	else:
-		tfile = "test_trees/ygob/4741.tre" # Perfect small tree
-		tr = Tree(tfile, debug=True)
-		print(tr.tsv_table(1, verbose=True, debug=True))
