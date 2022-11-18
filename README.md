@@ -32,10 +32,14 @@ Polytomies are treated as such.
 
 # Installation
 
+This software is distributed through [Github](https://github.com/dpl10/SOS): you can either download the compressed zip file of the repository or clone it:
+
+`git clone https://github.com/dpl10/SOS`
+
 
 # Usage
 
-`sos.py -t <tree_file> -m <#> [-v] > output_tsv_file`
+`sos.py -t <tree_file> [-m <#>] [-v] > <output_file>`
 
 __where__:
 
