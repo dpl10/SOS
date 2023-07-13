@@ -8,7 +8,7 @@ from scipy.sparse import csr_matrix
 
 class Tree:
 	"""Simple class to manipulate unrooted phylogenetic trees."""
-	def __init__(self, tree_file: str, debug: bool = False):
+	def __init__(self, tree_file: str, debug: bool = False, name_delimiter: str = '#'):
 		"""Instantiates Tree class from a Newick tree file. Trees could have 
 		polytomies, branch lengths are discarded."""
 		self.list = []
@@ -40,6 +40,7 @@ class Tree:
 						line = re.sub(r'\):', ')=', line)
 						line = re.sub(r':', '=', line)
 						line = re.sub(r'\s+', ' ', line)
+						line = re.sub(r'\)[\d\.]+=', ')=', line) # Remove support
 
 					line = re.sub(r"\s+\)", ")", line)
 					node_pointer = -1
@@ -98,9 +99,12 @@ class Tree:
 								label += char
 		
 		for node in self.labels:
-			self.taxa[node] = self.labels[node].split('#')[0]
+			self.taxa[node] = self.labels[node].split(name_delimiter)[0]
+			#self.taxa[node] = re.split(name_delimiter, self.labels[node])[0]
 
 		if debug:
+			print(f'Taxa: {self.taxa}')
+			print(f'Labels: {self.labels}')
 			for pa,n in self.list:
 				if n in self.labels:
 					print(pa, n, self.labels[n])

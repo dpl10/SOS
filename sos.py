@@ -7,6 +7,7 @@ from phylo import Tree
 
 tree_file = None
 min_tax = 4
+delimit_char = '#'
 verbose_mode = False
 debug_mode = False
 
@@ -15,7 +16,7 @@ SOS: Sequestering Orthologous Subclades
 
 A Python script to encode orthologous clades in a phylogenetic tree.
 
-USAGE:	sos.py -t <tree_file> [-m <#>] [-v] > <output_file>
+USAGE:	sos.py -t <tree_file> [-m <#>] [-v] [-c <char>] > <output_file>
 
 WHERE:
 	-t	Input tree file.
@@ -24,6 +25,8 @@ WHERE:
 
 	-v	Verbose mode: outputs a matrix if there are a single orthologous set (single
 		column of ones) or if there are none (single column of zeros).
+
+	-c	Set the character separating taxon from read names (default = `#`).  
 
 CITATION: Salinas, Sondervan, Tessler and Little 2022. SOS: Sequestering Orthologous 
 Subclades. https://github.com/dpl10/SOS.
@@ -57,6 +60,14 @@ for ia in range(len(sys.argv)):
 		if min_tax <= 0:
 			print("Minimum taxa per set (-m) should be an integer greater than zero.")
 
+	elif sys.argv[ia] == "-c":
+	
+		if len(sys.argv[ia+1]) == 1:
+			delimit_char = sys.argv[ia+1]
+	
+		else:
+			raise ValueError("Taxon-read name delimiter (option `-c`) should be a single character.")
+
 	elif sys.argv[ia] == "-v":
 		verbose_mode = True
 
@@ -66,10 +77,10 @@ for ia in range(len(sys.argv)):
 
 if tree_file and min_tax > 0:
 
-	param_bffr = f"\nExecution parameters:\n{tree_file=}\n{min_tax=}\n{verbose_mode=}\n"
+	param_bffr = f"\nExecution parameters:\n{tree_file=}\n{min_tax=}\n{verbose_mode=}\n{delimit_char=}\n"
 	print(f"{param_bffr}", file=sys.stderr)
 
-	tr = Tree(tree_file, debug=debug_mode)
+	tr = Tree(tree_file, debug=debug_mode, name_delimiter=delimit_char)
 	print(tr.tsv_table(min_tax, verbose=verbose_mode, debug=debug_mode))
 
 else:
