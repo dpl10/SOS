@@ -1,7 +1,0 @@
-#NEXUS
-
-begin trees ; 
-tree tnt_1 = [&U] 
-(Cgla#CAGL0I10147g ,(((((Cgla#CAGL0J11891g ,(Tbla#TBLA0A00100 ,Tbla#TBLA0J02065 )),(Tbla#TBLA0G01510 ,(Ncas#NCAS0G02790 ,Ncas#NCAS0G02800 ))),(Vpol#Kpol_416.4 ,(Tpha#TPHA0M00095 ,((Tpha#TPHA0J03240 ,(Tpha#TPHA0N00110 ,(Tpha#TPHA0G00200 ,Tpha#TPHA0L00130 ))),((Vpol#Kpol_1049.21 ,(Vpol#Kpol_198.2 ,(Vpol#Kpol_529.32 ,((Vpol#Kpol_529.31 ,(Vpol#Kpol_433.2 ,(Vpol#Kpol_1024.1 ,(Vpol#Kpol_2000.110 ,Vpol#Kpol_507.1 )))),(((Vpol#Kpol_212.1 ,Vpol#Kpol_332.1 ),(Vpol#Kpol_327.1 ,(Vpol#Kpol_351.1 ,Vpol#Kpol_433.3 ))),(Vpol#Kpol_293.4 ,Vpol#Kpol_529.33 )))))),(Vpol#Kpol_158.1 ,Vpol#Kpol_458.3 )))))),(Vpol#Kpol_355.2 ,Vpol#Kpol_358.5 )),((Vpol#Kpol_507.2 ,((Vpol#Kpol_1054.64 ,(Vpol#Kpol_1054.67 ,(Vpol#Kpol_1054.65 ,Vpol#Kpol_324.1 ))),(Vpol#Kpol_204.1 ,Vpol#Kpol_408.3 ))),(Vpol#Kpol_406.1 ,(Vpol#Kpol_211.1 ,Vpol#Kpol_231.1 ,Vpol#Kpol_241.1 ,(Vpol#Kpol_279.1 ,Vpol#Kpol_433.1 ))))));
-
-end ; 

@@ -1,7 +1,0 @@
-#NEXUS
-
-begin trees ; 
-tree tnt_1 = [&U] 
-(Cgla#CAGL0H09416g ,(((((Tbla#TBLA0D04490 ,((Tbla#TBLA0I01190 ,Tpha#TPHA0G03130 ,Vpol#Kpol_467.23 ,((Cgla#CAGL0J01353g ,Knag#KNAG0E02550 ,(Kafr#KAFR0A00740 ,(Ncas#NCAS0A07820 ,Ndai#NDAI0H02210 )),(Skud#Skud_13.245 ,(Suva#Suva_13.266 ,(Scer#YMR089C ,Smik#Smik_13.273 )))),(Tdel#TDEL0A02480 ,Zrou#ZYRO0G03212g ,((Lklu#SAKL0E03014g ,(Klac#KLLA0F13706g ,(Ecym#Ecym_7400 ,Egos#ABL041W ))),(Lthe#KLTH0D05412g ,Lwal#Kwal_26.7749 ))))),(Vpol#Kpol_1045.11 ,(Ndai#NDAI0E03960 ,(Tbla#TBLA0F01470 ,(Kafr#KAFR0K02060 ,((Cgla#CAGL0K05093g ,(Skud#Skud_16.309 ,Suva#Suva_16.351 ,(Scer#YPR024W ,Smik#Smik_16.265 ))),(Knag#KNAG0C03320 ,((Lklu#SAKL0F13376g ,((Klac#KLLA0E06711g ,(Ecym#Ecym_7123 ,Egos#AGL274W )),(Lthe#KLTH0C05742g ,(Lwal#Kwal_27.10642 ,Lwal#Kwal_27.10646 ,Lwal#Kwal_YGOB_27.10642 )))),(Tdel#TDEL0C02930 ,Zrou#ZYRO0F13024g ),(Tpha#TPHA0E00660 ,Vpol#Kpol_1018.113 ))),(Ncas#NCAS0A14640 ,Ndai#NDAI0A01390 )))))))),(Kafr#KAFR0G02800 ,Knag#KNAG0L01060 )),(Ncas#NCAS0E02020 ,Ndai#NDAI0E03580 )),((Tdel#TDEL0H02770 ,(Zrou#ZYRO0D15290g ,((Lklu#SAKL0F03894g ,((Ecym#Ecym_1258 ,Egos#AAR025C ),(Klac#Klac_YGOB_Anc_7.168 ,Klac#Klac_YGOB_Anc_7.168b ))),(Lthe#KLTH0F13904g ,Lwal#Kwal_55.21051 ,Lwal#Kwal_55.21054 )))),(Tpha#TPHA0C01520 ,Vpol#Kpol_401.3 ))),(Scer#YER017C ,Smik#Smik_5.138 ,(Skud#Skud_5.121 ,Suva#Suva_5.109 ))));
-
-end ; 

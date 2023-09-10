@@ -1,7 +1,0 @@
-#NEXUS
-
-begin trees ; 
-tree tnt_1 = [&U] 
-(Ambtri#ATR_00043G00570 ,(Aratha#AT5G54540 ,(Selmoe#437468 ,(((Ambtri#ATR_00111G00120 ,(Aratha#AT4G25170 ,Aratha#AT5G61490 )),(((Phypat#Pp3c15_19720V3 ,Phypat#Pp3c9_19620V3 ),(Phypat#Pp3c17_23830V3 ,Phypat#Pp3c2_1090V3 )),(Phypat#Pp3c20_4980V3 ,Wolnob#Wono058590.1 ))),((Ginbil#evm.model.chr3.2285 ,((Ginbil#evm.model.chr1.1311 ,(Seqgig#SEGI_39337 ,Wolnob#Wono011710.1 )),(Ginbil#evm.model.chr3.2282 ,Ginbil#evm.model.chr3.2284 ))),((Pintae#PITA_15503 ,Pintae#PITA_40515 ,(Pintae#PITA_12113 ,Pintae#PITA_37797 )),((Seqgig#SEGI_16254 ,Seqgig#SEGI_27148 ),(Wolnob#Wono424940.2 ,(Wolnob#Wono424920.5 ,(Wolnob#Wono424930.4 ,Wolnob#Wono424950.2 ))))))))));
-
-end ; 

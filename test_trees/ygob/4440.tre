@@ -1,7 +1,0 @@
-#NEXUS
-
-begin trees ; 
-tree tnt_1 = [&U] 
-(Lthe#KLTH0D00440g ,((Lthe#KLTH0G19536g ,(Lthe#KLTH0G19558g ,Lwal#Kwal_23.6563 )),(Tdel#TDEL0H04490 ,(Tdel#TDEL0C07030 ,Tdel#TDEL0F00140 ))));
-
-end ; 

@@ -1,7 +1,0 @@
-#NEXUS
-
-begin trees ; 
-tree tnt_1 = [&U] 
-(Cgla#CAGL0C02585g ,(((((Klac#KLLA0E00837g ,((Cgla#CAGL0D02838g ,((Ndai#NDAI0D04890 ,(Ncas#NCAS0A02940 ,(Kafr#KAFR0L00260 ,Knag#KNAG0E01040 ))),(((Vpol#Kpol_1044.15 ,(Suva#Suva_10.38 ,(Skud#Skud_12.33 ,(Scer#YLL034C ,Smik#Smik_12.22 )))),(Tdel#TDEL0G01680 ,Zrou#ZYRO0G08008g )),(Tbla#TBLA0E01450 ,Tpha#TPHA0K02220 )))),(Lklu#SAKL0H25630g ,(Ecym#Ecym_6218 ,Egos#AFR188W )))),(Lthe#KLTH0E06006g ,Lwal#Kwal_55.20644 )),(Tbla#TBLA0C04840 ,(Tbla#TBLA0J00640 ,(Tpha#TPHA0A03260 ,Vpol#Kpol_1020.9 ,Vpol#Kpol_2000.15 ,(Kafr#KAFR0L01190 ,(Cgla#CAGL0J09350g ,Knag#KNAG0B02940 )),((Ecym#Ecym_8037 ,Egos#AFR158W ),(Klac#KLLA0F05676g ,(Lklu#SAKL0F09834g ,(Lthe#KLTH0A05324g ,Lwal#Kwal_23.5996 )))),((Ncas#NCAS0A13760 ,Ndai#NDAI0A02280 ),(Ncas#NCAS0E03580 ,Ndai#NDAI0A03040 )),(Smik#Smik_4.111 ,Suva#Suva_4.119 ,(Scer#YDL126C ,Skud#Skud_4.129 )),(Tdel#TDEL0H01560 ,Zrou#ZYRO0C09262g ))))),(Ecym#Ecym_3259 ,Egos#AER065C )),(Tdel#TDEL0E01110 ,(Tbla#TBLA0A06380 ,((Zrou#ZYRO0B12606g ,((Kafr#KAFR0A05890 ,(Suva#Suva_10.514 ,(Skud#Skud_12.482 ,(Scer#YLR397C ,Smik#Smik_12.484 )))),(Ncas#NCAS0J01550 ,Ndai#NDAI0J02320 ))),((Knag#KNAG0B06160 ,(Klac#KLLA0B03234g ,(Lklu#SAKL0H02750g ,(Lthe#KLTH0D14586g ,Lwal#Kwal_23.4194 )))),(Tpha#TPHA0B00730 ,Vpol#Kpol_483.20 )))))));
-
-end ; 

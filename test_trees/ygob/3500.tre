@@ -1,7 +1,0 @@
-#NEXUS
-
-begin trees ; 
-tree tnt_1 = [&U] 
-(Smik#Smik_10.210 ,Smik#Smik_10.33 ,Smik#Smik_11.68 ,Smik#Smik_12.32 ,Smik#Smik_13.309 ,Smik#Smik_15.46 ,Smik#Smik_16.366 ,Smik#Smik_4.418 ,Smik#Smik_4.722 ,Smik#Smik_5.332 ,Smik#Smik_6.240 ,Smik#Smik_6.377 ,Smik#Smik_7.157 ,Smik#Smik_9.251 ,(Smik#Smik_13.148 ,Smik#Smik_8.264 ,(Smik#Smik_27.4 ,Smik#Smik_7.36 ),(Smik#Smik_3.199 ,Smik#Smik_3.60 )));
-
-end ; 

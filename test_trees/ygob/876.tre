@@ -1,7 +1,0 @@
-#NEXUS
-
-begin trees ; 
-tree tnt_1 = [&U] 
-(Lwal#Kwal_14.699 ,(Lwal#Kwal_15.2646 ,Lwal#Kwal_15.2652 ,Lwal#Kwal_22.2746 ,Lwal#Kwal_23.2767 ,Lwal#Kwal_23.2770 ,Lwal#Kwal_23.3703 ,Lwal#Kwal_24.6611 ,Lwal#Kwal_33.15651 ,Lwal#Kwal_34.15668 ,Lwal#Kwal_34.15670 ,Lwal#Kwal_34.15692 ,Lwal#Kwal_47.19375 ,(Lwal#Kwal_22.2752 ,Lwal#Kwal_55.22252 ),(Lwal#Kwal_24.6608 ,Lwal#Kwal_34.15690 ),(Lwal#Kwal_31.12902 ,Lwal#Kwal_38.16359 ,Lwal#Kwal_39.16428 ,Lwal#Kwal_60.24923 ),(Lwal#Kwal_47.17022 ,Lwal#Kwal_55.22263 )));
-
-end ; 

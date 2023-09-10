@@ -1,7 +1,0 @@
-#NEXUS
-
-begin trees ; 
-tree tnt_1 = [&U] 
-(Scer#YOR192CC ,(Skud#Skud_12.184 ,(Skud#Skud_15.293 ,(Skud#Skud_12.416 ,Skud#Skud_2.107 ,(Skud#Skud_10.184 ,Skud#Skud_12.304 ,Skud#Skud_13.320 ,Skud#Skud_14.56 ,Skud#Skud_16.357 ,Skud#Skud_3.62 ,Skud#Skud_3.83 ,Skud#Skud_39.1 ,Skud#Skud_4.432 ,Skud#Skud_4.721 ,Skud#Skud_4.817 ,Skud#Skud_42.1 ,Skud#Skud_5.113 ,Skud#Skud_5.323 ,Skud#Skud_7.157 ,Skud#Skud_7.317 ,Skud#Skud_7.456 ,Skud#Skud_8.54 ,(Skud#Skud_15.454 ,Skud#Skud_16.429 ,(Skud#Skud_10.213 ,Skud#Skud_3.69 )),(Skud#Skud_11.158 ,Skud#Skud_15.178 ),(Skud#Skud_33.3 ,(Skud#Skud_12.229 ,Skud#Skud_12.505 ,(Skud#Skud_15.130 ,Skud#Skud_6.82 ,Skud#Skud_6.85 )),(Skud#Skud_13.256 ,Skud#Skud_16.457 )),(Skud#Skud_12.419 ,(Skud#Skud_12.385 ,Skud#Skud_7.519 )),(Skud#Skud_13.110 ,Skud#Skud_2.93 ,Skud#Skud_5.272 ,Skud#Skud_7.184 ),(Skud#Skud_4.347 ,Skud#Skud_7.428 )),(Skud#Skud_12.294 ,(Skud#Skud_5.17 ,Skud#Skud_5.64 )),(Skud#Skud_12.355 ,Skud#Skud_4.43 )))));
-
-end ; 

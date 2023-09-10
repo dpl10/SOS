@@ -1,7 +1,0 @@
-#NEXUS
-
-begin trees ; 
-tree tnt_1 = [&U] 
-(Kafr#KAFR0G03830 ,(Lwal#Kwal_2.443 ,((Knag#KNAG0D03620 ,(Knag#KNAG0B00100 ,Knag#KNAG0C00130 )),((Lwal#Kwal_11.654 ,Lwal#Kwal_15.2641 ,Lwal#Kwal_16.2655 ,Lwal#Kwal_23.2771 ,Lwal#Kwal_23.2774 ,Lwal#Kwal_23.3697 ,Lwal#Kwal_24.6612 ,Lwal#Kwal_31.12910 ,Lwal#Kwal_37.16342 ,Lwal#Kwal_39.16431 ,Lwal#Kwal_47.19372 ,Lwal#Kwal_55.22249 ,Lwal#Kwal_60.24929 ,(Lwal#Kwal_15.2648 ,Lwal#Kwal_47.17026 ),(Lwal#Kwal_22.2749 ,(Lwal#Kwal_34.15674 ,Lwal#Kwal_47.19376 )),(Lwal#Kwal_23.3700 ,Lwal#Kwal_8.533 ),(Lwal#Kwal_23.3701 ,Lwal#Kwal_31.12905 ,Lwal#Kwal_60.24926 ),(Lwal#Kwal_38.16362 ,Lwal#Kwal_55.22261 ),(Lwal#Kwal_38.16366 ,Lwal#Kwal_55.22259 )),(Lwal#Kwal_33.12939 ,(Lwal#Kwal_2.444 ,Lwal#Kwal_2.445 ,Lwal#Kwal_25.6628 ,Lwal#Kwal_27.11204 ,Lwal#Kwal_27.11206 ,Lwal#Kwal_47.16550 ))))));
-
-end ; 

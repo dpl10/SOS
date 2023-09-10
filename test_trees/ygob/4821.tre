@@ -1,7 +1,0 @@
-#NEXUS
-
-begin trees ; 
-tree tnt_1 = [&U] 
-(Scer#YLR415C ,(Suva#Suva_10.531 ,(Skud#Skud_12.499 ,Smik#Smik_12.501 )));
-
-end ; 
