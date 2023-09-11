@@ -5,7 +5,7 @@ A Python utility to encode sets of ortholog sequences in a phylogenetic tree, as
 
 Polytomies are treated as such.
 
-#### Procedure description
+# Procedure description
 
 **Input:** A text file containing a single phylogenetic tree, following the Newick or TNT standard. 
 
@@ -32,7 +32,7 @@ Polytomies are treated as such.
 
 # Installation
 
-This software is distributed through [Github](https://github.com/dpl10/SOS): you can either download the compressed zip file of the repository or clone it:
+This software is distributed through [Github](https://github.com/dpl10/SOS): you can either download the main script (`sos.py`) of the repository or clone it:
 
 `git clone https://github.com/dpl10/SOS`
 
@@ -52,11 +52,11 @@ __where__:
 By default the script does not produce any output under non-informative circunstances, 
 such as the tree having a single species, a single representative per species or 
 not containing any orthologous set. In verbose mode, it will output a non-informative 
-matrix for each one of these cases.
+matrix for any of these cases.
 
 # License
 
-Copyright (c) 2022 Nelson R. Salinas & Damon Little.
+Copyright (c) 2022 Nelson R. Salinas, Veronica Sondervan, Michael Tessler, & Damon Little.
 
 SOS is available under the MIT License. See LICENSE for more information.
 

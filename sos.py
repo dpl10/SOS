@@ -26,7 +26,7 @@ WHERE:
 
 	-c	Character to split terminal names into taxon and read names (default = `#`).  
 
-CITATION: Salinas, Sondervan, Tessler and Little 2022. SOS: Sequestering Orthologous 
+CITATION: Salinas, Tessler, Sondervan, and Little 2022. SOS: Sequestering Orthologous 
 Subclades. https://github.com/dpl10/SOS.
 
 """
