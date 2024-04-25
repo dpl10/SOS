@@ -248,7 +248,7 @@ class Tree:
 		"""
 		
 		pass_test = True
-		#print(f"{target_node=}, {excluded_node=}")
+		#print(f"target_node: {target_node}, excluded_node: {excluded_node}")
 		if self.results[target_node, excluded_node] == 0:
 			
 			#r = self.adj_table_[target_node]
@@ -257,7 +257,7 @@ class Tree:
 			icr = icr[icr != excluded_node]
 			icr = icr.tolist()
 			#internal = [x for x in icr if not x in self.labels]
-			#print(f"{icr=}")
+			#print(f"icr: {icr}")
 
 			#if len(internal) > 0:
 			if len(icr) > 0:
@@ -273,7 +273,7 @@ class Tree:
 
 				# Init name_struct to the final shape  <<===
 				thleaves = self.names_struc_from_node(target_node, excluded_node)
-				#print(f"{thleaves=}")
+				#print(f"thleaves: {thleaves}")
 
 				# if target node is leaf (then thleaves == []), let's assume it is ortholog set
 				if len(thleaves) > 0: 
@@ -287,7 +287,7 @@ class Tree:
 					#print(name_struc)
 
 					superset = reduce(lambda x,y: x | y, name_struc)
-					#print(f"{superset=}")
+					#print(f"superset: {superset}")
 					if len(superset) == 1:
 						pass_test = True
 
@@ -296,7 +296,7 @@ class Tree:
 							if len(i & d) > 0:
 								pass_test = False
 								break
-			#print(f"{pass_test=}")
+			#print(f"pass_test: {pass_test}")
 			if pass_test:
 				self.results[target_node, excluded_node] = 2
 			else:
@@ -391,17 +391,17 @@ class Tree:
 
 
 				# Find orthologous clades
-				if debug: print(f"{inits=}")
+				if debug: print(f"inits: {inits}")
 
 				for start in inits:
-					if debug: print(f"{start=}")
+					if debug: print(f"start: {start}")
 					prev_node = None
 					curr_node = start
 					curr_excluded = list(inits[curr_node].keys())
 					still = True
 					
 					while still:
-						if debug: print(f"{curr_node=}, {prev_node=}")
+						if debug: print(f"curr_node: {curr_node}, prev_node: {prev_node}")
 
 						neighs = self.get_neighbors(curr_node, curr_excluded)
 
@@ -424,7 +424,7 @@ class Tree:
 
 						curr_excluded.append(curr_node)
 						cands = []
-						if debug: print(f"{neighs=}")
+						if debug: print(f"neighs: {neighs}")
 
 						for nei in neighs:
 							test = self.results[curr_node, nei]
@@ -434,7 +434,7 @@ class Tree:
 							else:
 								curr_excluded.append(nei)
 
-						if debug: print(f"{cands=}")
+						if debug: print(f"cands: {cands}")
 						if len(cands) == 0:
 							still = False
 							
@@ -562,7 +562,7 @@ if __name__ == "__main__":
 
 	if tree_file and min_tax > 0:
 
-		param_bffr = f"\nExecution parameters:\n{tree_file=}\n{min_tax=}\n{verbose_mode=}\n{split_char=}\n"
+		param_bffr = f"\nExecution parameters:\ntree_file: {tree_file}\nmin_tax: {min_tax}\nverbose_mode: {verbose_mode}\nsplit_char: {split_char}\n"
 		print(f"{param_bffr}", file=sys.stderr)
 
 		tr = Tree(tree_file, debug=debug_mode, split_char=split_char)
